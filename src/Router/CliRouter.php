@@ -33,7 +33,7 @@ class CliRouter extends AbstractRouter implements Interfaces\RouterInterface {
 	 * @return array
 	 */
 	protected function parseRequestUri($path){
-		$url  = parse_url("{$this->namespace}/{$path}");
+		$url  = parse_url($path);
 		$path = pathinfo($url["path"]);
 
 		$controller = "";

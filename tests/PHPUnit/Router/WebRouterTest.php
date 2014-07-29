@@ -7,7 +7,7 @@ class WebRouterTest extends PHPUnit_Framework_TestCase {
 	function test_parsePath(){
 		$path = "name/space/class/method.html?query=params";
 
-		$router = new Router\WebRouter("");
+		$router = new Router\WebRouter;
 
 		$result = $router->match($path);
 
@@ -18,7 +18,7 @@ class WebRouterTest extends PHPUnit_Framework_TestCase {
 			["query" => "params"]
 		);
 
-		$this->assertInstanceOf("Chevron\\Kernel\\Router\\Route", $result);
+		$this->assertInstanceOf("\\Chevron\\Kernel\\Router\\Route", $result);
 		$this->assertEquals($expected, $result);
 
 	}
