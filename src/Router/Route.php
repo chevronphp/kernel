@@ -4,7 +4,7 @@ namespace Chevron\Kernel\Router;
 /**
  * an object representing a parsed route
  *
- * @package Chevron\Router
+ * @package Chevron\Kernel
  * @author Jon Henderson
  */
 class Route implements Interfaces\RouteInterface{

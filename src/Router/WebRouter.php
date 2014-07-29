@@ -4,7 +4,7 @@ namespace Chevron\Kernel\Router;
 /**
  * A very simple and quite opinionated routing system
  *
- * @package Chevron\Router
+ * @package Chevron\Kernel
  * @author Jon Henderson
  */
 class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
@@ -13,7 +13,7 @@ class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
 	 * public access to get a populated Route
 	 *
 	 * @param string $path A string representing the path to be parsed -- $_SERVER[REQUEST_URI]
-	 * @return \Chevron\Router\Route
+	 * @return Route
 	 */
 	function match($path, array $params = []){
 		list($controller, $action, $format, $parameters) = $this->parseRequestUri($path);
@@ -59,37 +59,5 @@ class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
 
 		return [$controller, $action, $format, $query];
 	}
-
-	// protected $preHooks  = [];
-
-	// protected function preHooks($path){
-	// 	if(!$this->preHooks){ return; };
-	// 	foreach($this->preHooks as $hook){
-	// 		$return = call_user_func($hook, $path);
-	// 		if($return InstanceOf Interfaces\RouteInterface){
-	// 			return $return;
-	// 		}
-	// 	}
-	// }
-
-	// function preHook(callable $func){
-	// 	$this->preHooks[] = $func;
-	// }
-
-	// protected $postHooks = [];
-
-	// protected function postHooks($route){
-	// 	if(!$this->postHooks){ return; };
-	// 	foreach($this->postHooks as $hook){
-	// 		$return = call_user_func($hook, $route);
-	// 		if($return InstanceOf Interfaces\RouteInterface){
-	// 			return $return;
-	// 		}
-	// 	}
-	// }
-
-	// function postHook(callable $func){
-	// 	$this->postHooks[] = $func;
-	// }
 
 }

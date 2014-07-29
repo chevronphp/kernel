@@ -1,7 +1,12 @@
 <?php
 
 namespace Chevron\Kernel\Router\Interfaces;
-
+/**
+ * our signature for a Route
+ *
+ * @package Chevron\Kernel
+ * @author Jon Henderson
+ */
 interface RouteInterface {
 
 	/**
