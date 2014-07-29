@@ -11,7 +11,7 @@ class Dispatcher {
 
 	protected $di;
 
-	function __constructor( DiInterface $di ){
+	function __construct( DiInterface $di ){
 		$this->di = $di;
 	}
 
