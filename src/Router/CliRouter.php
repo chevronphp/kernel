@@ -34,19 +34,31 @@ class CliRouter extends AbstractRouter implements Interfaces\RouterInterface {
 	 */
 	protected function parseRequestUri($path){
 		$url  = parse_url($path);
-		$path = pathinfo($url["path"]);
+
+		$parts = explode("/", $url["path"]);
+		$action = array_pop($parts); // methods are lowercase
+		array_walk($parts, function(&$v, $k){
+			$v = ucwords($v);
+		});
+		$class = implode("\\", $parts);
 
 		$controller = "";
-		if(isset($path["dirname"])){
-			$controller = strtr(ucwords(strtr(ltrim($path["dirname"], " /"), "/", " ")), " ", "\\");
+		if($class){
+			$controller = $class;
 		}
 
-		$action = "index";
-		if(isset($path["filename"])){
-			$action = $path["filename"] ?: $action;
+		$method = "index";
+		// $format = "html";
+		if($action){
+			$method = $action;
+			if(($pos = strpos($action, ".")) !== false){
+				$method = substr($action, 0, $pos);
+				// $format = substr($action, ++$pos);
+			}
 		}
 
-		return [$controller, $action];
+		return [$controller, $method];
+
 	}
 
 }
