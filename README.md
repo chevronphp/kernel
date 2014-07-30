@@ -3,7 +3,7 @@
 Kernel comprises a router, dispatcher, and controller. With a little work they
 could probably be independent pieces but if you want to use one you'll have to
 supply the other components (even if you're not using these). To eliminate
-confusion (and because I copuled these peices together) they coexist in one
+confusion (and because I coupled these peices together) they coexist in one
 package.
 
 # Usage
