@@ -22,17 +22,19 @@ class ErrorController extends AbstractController {
 		}
 	}
 
+	protected function setErrorHeaders($status){
+		$response = $this->di->get("response");
+		if($response InstanceOf HeadersInterface){
+			$response->detectContentTypeByExtension($this->getRoute()->getFormat());
+			$response->setStatusCode($status);
+		}
+	}
+
 	/**
 	 * handle the 404 error
 	 */
 	function _404(){
-		$response = $this->di->get("response");
-
-		if($response InstanceOf HeadersInterface){
-			$response->detectContentTypeByExtension($this->getRoute()->getFormat());
-			$response->setStatusCode(404);
-		}
-
+		$this->setErrorHeaders(404);
 		return function(){
 			echo "404 means \"00PS\" in H@X0R.";
 		};
@@ -41,14 +43,8 @@ class ErrorController extends AbstractController {
 	/**
 	 * handle the 500 error
 	 */
-	function _500(){
-		$response = $this->di->get("response");
-
-		if($response InstanceOf HeadersInterface){
-			$response->detectContentTypeByExtension($this->getRoute()->getFormat());
-			$response->setStatusCode(500);
-		}
-
+	function _500(500){
+		$this->setErrorHeaders(500);
 		return function(){
 			echo "@#$% Oh Noes!!";
 		};
