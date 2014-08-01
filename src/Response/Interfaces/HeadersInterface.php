@@ -5,7 +5,7 @@ namespace Chevron\Kernel\Response\Interfaces;
 /**
  *
  */
-class HeadersInterface {
+interface HeadersInterface {
 
 
 	/**
