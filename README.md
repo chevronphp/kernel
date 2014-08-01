@@ -6,6 +6,14 @@ supply the other components (even if you're not using these). To eliminate
 confusion (and because I coupled these peices together) they coexist in one
 package.
 
+These components would benefit from beig decoupled. However, the represent the various
+pieces of a working application and while they are distinct, they are all symbiotic.
+You could probably use one of these with a component from a different ecosystem but
+you'd probably end up doing a bit of gymnastics to glue tem together. That's why
+I've packaged these components together. Given that composer makes importing code
+trivial, you can plug this in and use part of it or use all of it. In the end,
+these components make a lot more sense when placed in context with each other.
+
 # Usage
 
 See examples/ or tests/ ...
