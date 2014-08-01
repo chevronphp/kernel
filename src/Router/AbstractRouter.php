@@ -2,7 +2,8 @@
 
 namespace Chevron\Kernel\Router;
 /**
- * A very simple and quite opinionated routing system
+ * A very simple and quite opinionated routing system, this is here ONLY to tweak
+ * inheritence later on if I get the urge.
  *
  * @package Chevron\Kernel
  * @author Jon Henderson
