@@ -89,12 +89,23 @@ class Route implements Interfaces\RouteInterface{
 	}
 
 	function __toString(){
-		return trim(vsprintf("%s/%s.%s?%s", [
-			strtolower(strtr(trim($this->getController(), DIRECTORY_SEPARATOR), "\\", "/")),
-			strtolower($this->getAction()),
-			strtolower($this->getFormat()),
-			http_build_query($this->getParams())
-		]), "?");
+
+		$route = strtolower(strtr(trim($this->getController(), DIRECTORY_SEPARATOR), "\\", "/")) . "/";
+
+		if($this->action){
+			$route .= strtolower($this->getAction());
+		}
+
+		if($this->format){
+			$route .= "." . strtolower($this->getFormat());
+		}
+
+		if($this->params){
+			$route .= "?" . http_build_query($this->getParams());
+		}
+
+
+		return $route;
 	}
 
 }
