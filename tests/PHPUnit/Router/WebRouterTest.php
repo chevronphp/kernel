@@ -4,8 +4,27 @@ use Chevron\Kernel\Router;
 
 class WebRouterTest extends PHPUnit_Framework_TestCase {
 
-	function test_parsePath(){
-		$path = "name/space/class/method.html?query=params";
+	function test_parsePath_full(){
+		$path = "name/space/class/method.json?query=params";
+
+		$router = new Router\WebRouter;
+
+		$result = $router->match($path);
+
+		$expected = new Router\Route(
+			"Name\\Space\\Class",
+			"method",
+			"json",
+			["query" => "params"]
+		);
+
+		$this->assertInstanceOf("\\Chevron\\Kernel\\Router\\Route", $result);
+		$this->assertEquals($expected, $result);
+
+	}
+
+	function test_parsePath_partial_1(){
+		$path = "name/space/class/method?query=params";
 
 		$router = new Router\WebRouter;
 
@@ -16,6 +35,44 @@ class WebRouterTest extends PHPUnit_Framework_TestCase {
 			"method",
 			"html",
 			["query" => "params"]
+		);
+
+		$this->assertInstanceOf("\\Chevron\\Kernel\\Router\\Route", $result);
+		$this->assertEquals($expected, $result);
+
+	}
+
+	function test_parsePath_partial_2(){
+		$path = "name/space/class/?query=params";
+
+		$router = new Router\WebRouter;
+
+		$result = $router->match($path);
+
+		$expected = new Router\Route(
+			"Name\\Space\\Class",
+			"index",
+			"html",
+			["query" => "params"]
+		);
+
+		$this->assertInstanceOf("\\Chevron\\Kernel\\Router\\Route", $result);
+		$this->assertEquals($expected, $result);
+
+	}
+
+	function test_parsePath_partial_3(){
+		$path = "name/space/class/";
+
+		$router = new Router\WebRouter;
+
+		$result = $router->match($path);
+
+		$expected = new Router\Route(
+			"Name\\Space\\Class",
+			"index",
+			"html",
+			[]
 		);
 
 		$this->assertInstanceOf("\\Chevron\\Kernel\\Router\\Route", $result);
