@@ -10,14 +10,15 @@ class CurrentRequest extends BaseRequest {
 	 * Create a Request object based on the information in $_SERVER about the
 	 * current request
 	 *
-	 * @param bool $request_authorization Send basic authorization headers
+	 * @param bool $getAuth Send basic authorization headers
 	 * @throws \Exception
 	 */
-	function __construct( $request_authorization = false ){
+	function __construct( $getAuth = false ){
 
 		$auth_prefix = "";
-		if($request_authorization){
-			$auth_prefix = vsprintf("%s:%s@", $this->request_authorization());
+		if($getAuth){
+			list($u, $p) = $this->getAuth();
+			$auth_prefix = sprintf("%s:%s@", $u, $p);
 		}
 
 		$scheme = "http";
@@ -54,7 +55,7 @@ class CurrentRequest extends BaseRequest {
 	 *
 	 * @return array
 	 */
-	protected function request_authorization(){
+	protected function getAuth(){
 		$username = $password = "";
 
 		switch( true ){
@@ -71,8 +72,7 @@ class CurrentRequest extends BaseRequest {
 				header('WWW-Authenticate: Basic realm="Chevron"');
 				header('HTTP/1.0 401 Unauthorized');
 				printf("It was a good rain, the kind you wait for ...");
-				die();
-			break;
+			die();
 		}
 
 		return array( $username, $password );
@@ -88,7 +88,7 @@ class CurrentRequest extends BaseRequest {
 	 */
 	function pwd($file = "", array $params = array(), $preserve = true){
 		$request = clone $this;
-		$path = rtrim($request->dirname, " /");
+		$path = rtrim($request->getDirname(), " /");
 		$request->alter_request(array("path" => "{$path}/{$file}", "host" => null));
 		return $request->rebuild($params, $preserve);
 	}
@@ -133,20 +133,7 @@ class CurrentRequest extends BaseRequest {
 	 * @return bool
 	 */
 	function is_post(){
-		return $this->action === "POST";
-	}
-
-	/**
-	 * method to get a specific header from the current request. The
-	 * retrieval is scoped to only those headers that start with HTTP_
-	 * @param string $name The name of the header WITHOUT the HTTP_
-	 * @return string
-	 */
-	function getHeader($name){
-		if(array_key_exists($name, $this->headers)){
-			return $this->headers[$name];
-		}
-		return null;
+		return $this->getAction() === "POST";
 	}
 
 }

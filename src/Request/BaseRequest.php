@@ -4,29 +4,7 @@ namespace Chevron\Kernel\Request;
 
 class BaseRequest {
 
-	protected $url;
-
-	protected $info = array(
-		"scheme"           => "",
-		"host"             => "",
-		"port"             => "",
-		"path"             => "",
-		"query"            => "",
-		"sub_domain"       => "",
-		"domain"           => "",
-		"top_level_domain" => "",
-		"user"             => "",
-		"pass"             => "",
-		"query_arr"        => array(),
-		"dirname"          => "",
-		"basename"         => "",
-		"extension"        => "",
-		"filename"         => "",
-		"action"           => "",
-		"hash"             => "",
-		"status_code"      => "200",
-		"content_type"     => "",
-	);
+	use Traits\BaseRequestProperiesTrait;
 
 	function __construct( $url = "", array $query = array() ){
 		if(empty($url)) return;
@@ -57,11 +35,11 @@ class BaseRequest {
 
 		$info = $this->parse_extended($info);
 
-		$info["action"] = $action;
+		$this->setAction($action);
 
 		foreach($info as $name => $value){
-			if(array_key_exists($name, $this->info)){
-				$this->info[$name] = $value;
+			if(property_exists($this, $name)){
+				$this->$name = $value;
 			}
 		}
 	}
@@ -109,29 +87,30 @@ class BaseRequest {
 	 */
 	function alter_request(array $info){
 		foreach($info as $part => $value){
-			if(array_key_exists($part, $this->info)){
-				switch(true){
-					case $part == "host" :
-						$temp = $this->parse_extended(array($part => $value));
-						$this->info["host"]             = $value;
-						$this->info["top_level_domain"] = $temp["top_level_domain"];
-						$this->info["domain"]           = $temp["domain"];
-						$this->info["sub_domain"]       = $temp["sub_domain"];
-					break;
-					case $part == "query"     : break;
-					case $part == "query_arr" : break;
-					case $part == "path"      :
-						$temp = $this->parse_extended(array($part => $value));
-						$this->info["path"]      = $value;
-						$this->info["dirname"]   = $temp["dirname"];
-						$this->info["basename"]  = $temp["basename"];
-						$this->info["extension"] = $temp["extension"];
-						$this->info["filename"]  = $temp["filename"];
-					break;
-					default :
-						$this->info[$part] = $value;
-					break;
-				}
+			switch(true){
+				case $part == "host" :
+					$temp = $this->parse_extended(array($part => $value));
+					$this->setHost($value);
+					$this->setTopLevelDomain($temp["top_level_domain"]);
+					$this->setDomain($temp["domain"]);
+					$this->setSubDomain($temp["sub_domain"]);
+				break;
+				case $part == "query"     : break;
+				case $part == "query_arr" : break;
+				case $part == "path"      :
+					$temp = $this->parse_extended(array($part => $value));
+					$this->setPath($value);
+					$this->setDirname($temp["dirname"]);
+					$this->setBasename($temp["basename"]);
+					$this->setExtension($temp["extension"]);
+					$this->setFilename($temp["filename"]);
+				break;
+				default :
+					$setter = "set{$part}";
+					if(method_exists($this, $setter)){
+						$this->$setter($value);
+					}
+				break;
 			}
 		}
 	}
@@ -143,10 +122,10 @@ class BaseRequest {
 	 */
 	function alter_query(array $params, $preserve = true){
 		if($preserve){
-			$params = array_merge($this->info["query_arr"], $params);
+			$params = array_merge($this->getQueryArr(), $params);
 		}
-		$this->info["query"]     = http_build_query($params, "no_", "&");;
-		$this->info["query_arr"] = $params;
+		$this->setQuery(http_build_query($params, "no_", "&"));
+		$this->setQueryArr($params);
 	}
 
 	/**
@@ -162,30 +141,6 @@ class BaseRequest {
 	}
 
 	/**
-	 * magic getter method
-	 * @param string $name The property to get
-	 * @return mixed
-	 */
-	function __get($name){
-		if(array_key_exists($name, $this->info)){
-			return $this->info[$name];
-		}
-		return null;
-	}
-
-	/**
-	 * magic isset method, will return if the property is empty
-	 * @param string $name The property to check
-	 * @return bool
-	 */
-	function __isset($name){
-		if(array_key_exists($name, $this->info)){
-			return !empty($this->info[$name]);
-		}
-		return false;
-	}
-
-	/**
 	 * method to take a Request object and reconstitute it to a full URL. if the
 	 * "host" param is empty, the URL will be relative
 	 * @param \Chevron\Requests\BaseRequest $request The object to reconstitute
@@ -194,43 +149,43 @@ class BaseRequest {
 	static function build_url( BaseRequest $request){
 
 		$absolute = "";
-		if(!empty($request->info["host"])){
+		if(!empty($request->getHost())){
 
 			$scheme = "http";
-			if(!empty($request->info["scheme"])){
-				$scheme = $request->info["scheme"];
+			if(!empty($request->getScheme())){
+				$scheme = $request->getScheme();
 			}
 
 			$auth_prefix = "";
-			if(!empty($request->info["user"])){
-				$auth_prefix = sprintf("%s:%s@", $request->info["user"], $request->info["pass"]);
+			if(!empty($request->getUser())){
+				$auth_prefix = sprintf("%s:%s@", $request->getUser(), $request->getPass());
 			}
 
 			$port = "";
-			if(!empty($request->info["port"])){
+			if(!empty($request->getPort())){
 				switch(true){
-					case $request->info["port"] == 80  : break;
-					case $request->info["port"] == 443 :
+					case $request->getPort() == 80  : break;
+					case $request->getPort() == 443 :
 						$scheme = "https";
 					break;
 					default :
-						$port = ":{$request->info["port"]}";
+						$port = ":" . $request->getPort();
 					break;
 				}
 			}
 
-			$host = $request->info["host"];
+			$host = $request->getHost();
 			$absolute = sprintf("%s://%s%s%s", $scheme, $auth_prefix, $host, $port);
 		}
 
 		$path = "";
-		if(!empty($request->info["path"])){
-			$path = ltrim($request->info["path"], "/");
+		if(!empty($request->getPath())){
+			$path = ltrim($request->getPath(), "/");
 		}
 
 		$query = "";
-		if(!empty($request->info["query_arr"])){
-			$query = http_build_query($request->info["query_arr"], "no_", "&");
+		if(!empty($request->getQueryArr())){
+			$query = http_build_query($request->getQueryArr(), "no_", "&");
 			$query = "?{$query}";
 		}
 

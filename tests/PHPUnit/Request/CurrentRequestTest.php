@@ -7,7 +7,7 @@ class CurrentRequestTest extends PHPUnit_Framework_TestCase {
 		// CurrentRequest is dependent on the $_SERVER array set in the phpunit XML manifest
 		$request = new \Chevron\Kernel\Request\CurrentRequest(false);
 
-		$this->assertInstanceOf("\Chevron\Kernel\Request\BaseRequest", $request, "CurrentRequest::__construct failed to return an object of the proper type");
+		$this->assertInstanceOf("\Chevron\Kernel\Request\BaseRequest", $request);
 
 	}
 
@@ -18,35 +18,31 @@ class CurrentRequestTest extends PHPUnit_Framework_TestCase {
 
 		// CurrentRequest is dependent on the $_SERVER array set in the phpunit XML manifest
 		$request = new \Chevron\Kernel\Request\CurrentRequest(false);
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
 
 		$expected = array(
-			"scheme"           => "http",
-			"host"             => "local.chevron.com",
-			"port"             => "80",
-			"path"             => "/local/file/index.html",
-			"query"            => "a=b&c=d",
-			"sub_domain"       => "local",
-			"domain"           => "chevron",
-			"top_level_domain" => "com",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(
+			"getScheme"           => "http",
+			"getHost"             => "local.chevron.com",
+			"getPort"             => "80",
+			"getPath"             => "/local/file/index.html",
+			"getQuery"            => "a=b&c=d",
+			"getSubDomain"       => "local",
+			"getDomain"           => "chevron",
+			"getTopLevelDomain" => "com",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(
 				"a" => "b",
 				"c" => "d",
 			),
-			"dirname"          => "/local/file",
-			"basename"         => "index.html",
-			"extension"        => "html",
-			"filename"         => "index",
-			"action"           => "GET",
+			"getDirname"          => "/local/file",
+			"getBasename"         => "index.html",
+			"getExtension"        => "html",
+			"getFilename"         => "index",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "CurrentRequest::__construct failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -60,8 +56,8 @@ class CurrentRequestTest extends PHPUnit_Framework_TestCase {
 
 		$url = "/local/file/new_file.html?a=b&c=d";
 
-		$this->assertEquals($result, $url, "CurrentRequest::pwd failed to rebuild the altered request");
-		$this->assertNotEquals($result, $original, "CurrentRequest::pwd failed to change the original request");
+		$this->assertEquals($result, $url);
+		$this->assertNotEquals($result, $original);
 	}
 
 	public function test_is_post(){
@@ -69,7 +65,7 @@ class CurrentRequestTest extends PHPUnit_Framework_TestCase {
 
 		$result = $request->is_post();
 
-		$this->assertFalse($result, "CurrentRequest::is_post failed to report the correct action");
+		$this->assertFalse($result);
 	}
 
 }

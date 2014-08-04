@@ -14,35 +14,30 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$request = new \Chevron\Kernel\Request\BaseRequest($url);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "",
-			"host"             => "",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "qry=str&snow=white",
-			"sub_domain"       => "",
-			"domain"           => "",
-			"top_level_domain" => "",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(
+			"getScheme"           => "",
+			"getHost"             => "",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "qry=str&snow=white",
+			"getSubDomain"       => "",
+			"getDomain"           => "",
+			"getTopLevelDomain" => "",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(
 				"qry"=>"str",
 				"snow"=>"white"
 			),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::__construct failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -52,35 +47,30 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$request = new \Chevron\Kernel\Request\BaseRequest($url);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "http",
-			"host"             => "local.testing.com",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "qry=str&snow=white",
-			"sub_domain"       => "local",
-			"domain"           => "testing",
-			"top_level_domain" => "com",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(
+			"getScheme"           => "http",
+			"getHost"             => "local.testing.com",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "qry=str&snow=white",
+			"getSubDomain"       => "local",
+			"getDomain"           => "testing",
+			"getTopLevelDomain" => "com",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(
 				"qry"=>"str",
 				"snow"=>"white"
 			),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::__construct failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -94,32 +84,27 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$request = new \Chevron\Kernel\Request\BaseRequest($url, $additional);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "http",
-			"host"             => "local.testing.com",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "seven=little+people",
-			"sub_domain"       => "local",
-			"domain"           => "testing",
-			"top_level_domain" => "com",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array("seven" => "little people"),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getScheme"           => "http",
+			"getHost"             => "local.testing.com",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "seven=little+people",
+			"getSubDomain"       => "local",
+			"getDomain"           => "testing",
+			"getTopLevelDomain" => "com",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array("seven" => "little people"),
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::__construct failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -150,7 +135,7 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 			'hash'             => '68527be74e41edaf65030fba85e9011d'
 		);
 
-		$this->assertEquals($expected, $result, "Request::parse_extended failed to parse the array correctly");
+		$this->assertEquals($expected, $result);
 
 	}
 
@@ -180,7 +165,7 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 			'hash'             => '68527be74e41edaf65030fba85e9011d'
 		);
 
-		$this->assertEquals($expected, $result, "Request::parse_extended failed to parse the array correctly");
+		$this->assertEquals($expected, $result);
 
 	}
 
@@ -190,35 +175,30 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		$request = new \Chevron\Kernel\Request\BaseRequest;
 		$result  = $request->parse($url);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "http",
-			"host"             => "local.testing.com",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "qry=str&snow=white",
-			"sub_domain"       => "local",
-			"domain"           => "testing",
-			"top_level_domain" => "com",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(
+			"getScheme"           => "http",
+			"getHost"             => "local.testing.com",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "qry=str&snow=white",
+			"getSubDomain"       => "local",
+			"getDomain"           => "testing",
+			"getTopLevelDomain" => "com",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(
 				"qry"=>"str",
 				"snow"=>"white"
 			),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::parse failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -229,32 +209,27 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		$request = new \Chevron\Kernel\Request\BaseRequest;
 		$result  = $request->parse($url);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "http",
-			"host"             => "local.testing.com",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "",
-			"sub_domain"       => "local",
-			"domain"           => "testing",
-			"top_level_domain" => "com",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getScheme"           => "http",
+			"getHost"             => "local.testing.com",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "",
+			"getSubDomain"       => "local",
+			"getDomain"           => "testing",
+			"getTopLevelDomain" => "com",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(),
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::parse failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -265,32 +240,27 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		$request = new \Chevron\Kernel\Request\BaseRequest;
 		$result  = $request->parse($url);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "",
-			"host"             => "",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "",
-			"sub_domain"       => "",
-			"domain"           => "",
-			"top_level_domain" => "",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getScheme"           => "",
+			"getHost"             => "",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "",
+			"getSubDomain"       => "",
+			"getDomain"           => "",
+			"getTopLevelDomain" => "",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(),
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::parse failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -301,35 +271,30 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		$request = new \Chevron\Kernel\Request\BaseRequest;
 		$result  = $request->parse($url);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$expected = array(
-			"scheme"           => "",
-			"host"             => "",
-			"port"             => "",
-			"path"             => "/dir/file.html",
-			"query"            => "q=s&t=f",
-			"sub_domain"       => "",
-			"domain"           => "",
-			"top_level_domain" => "",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(
+			"getScheme"           => "",
+			"getHost"             => "",
+			"getPort"             => "",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "q=s&t=f",
+			"getSubDomain"       => "",
+			"getDomain"           => "",
+			"getTopLevelDomain" => "",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(
 				"q" => "s",
 				"t" => "f",
 			),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::parse failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 
 	}
@@ -361,7 +326,7 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		$result = $request->build();
 		$url = "http://local.testing.com/dir/file.html?qry=str&snow=white";
 
-		$this->assertEquals($url, $result, "Request::build failed to build the currect request");
+		$this->assertEquals($url, $result);
 
 	}
 
@@ -374,7 +339,7 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		$result = $request->build();
 		$url = "/dir/file.html?qry=str&snow=white";
 
-		$this->assertEquals($url, $result, "Request::build failed to build the currect request");
+		$this->assertEquals($url, $result);
 
 	}
 
@@ -390,35 +355,31 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$result = $request->alter_request($changes);
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
 
 		$expected = array(
-			"scheme"           => "",
-			"host"             => "Chevron.com",
-			"port"             => "8080",
-			"path"             => "/dir/file.html",
-			"query"            => "qry=str&snow=white",
-			"sub_domain"       => "",
-			"domain"           => "Chevron",
-			"top_level_domain" => "com",
-			"user"             => "",
-			"pass"             => "",
-			"query_arr"        => array(
+			"getScheme"           => "",
+			"getHost"             => "Chevron.com",
+			"getPort"             => "8080",
+			"getPath"             => "/dir/file.html",
+			"getQuery"            => "qry=str&snow=white",
+			"getSubDomain"       => "",
+			"getDomain"           => "Chevron",
+			"getTopLevelDomain" => "com",
+			"getUser"             => "",
+			"getPass"             => "",
+			"getQueryArr"        => array(
 				"qry" => "str",
 				"snow" => "white",
 			),
-			"dirname"          => "/dir",
-			"basename"         => "file.html",
-			"extension"        => "html",
-			"filename"         => "file",
-			"action"           => "GET",
+			"getDirname"          => "/dir",
+			"getBasename"         => "file.html",
+			"getExtension"        => "html",
+			"getFilename"         => "file",
+			"getAction"           => "GET",
 		);
 
-		foreach($expected as $key => $value){
-			$this->assertEquals($info[$key], $value, "Request::parse failed to set the {$key} property");
+		foreach($expected as $method => $value){
+			$this->assertEquals($request->$method(), $value);
 		}
 	}
 
@@ -438,7 +399,7 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$url = "http://Chevron.com:8080/dir/file.html?qry=str&snow=white";
 
-		$this->assertEquals($url, $result, "Request::build failed to build the altered request");
+		$this->assertEquals($url, $result);
 
 	}
 
@@ -460,7 +421,7 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$url = "http://goose:dog@Chevron.com:8080/dir/file.html?qry=str&snow=white";
 
-		$this->assertEquals($url, $result, "Request::build failed to build the altered request with authorization");
+		$this->assertEquals($url, $result);
 
 	}
 
@@ -480,11 +441,6 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$result = $request->alter_query($changes);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$query       = "qry=str&snow=white&host=Chevron.com&port=8080&user=goose&pass=dog&spaces=goose+is+a+dog";
 		$query_arr = array(
 			"qry"    => "str",
@@ -496,8 +452,8 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 			"spaces" => "goose is a dog",
 		);
 
-		$this->assertEquals($query, $info["query"], "Request::alter_query failed to alter and preserve the query string");
-		$this->assertEquals($query_arr, $info["query_arr"], "Request::alter_query failed to alter and preserve the query array");
+		$this->assertEquals($query, $request->getQuery());
+		$this->assertEquals($query_arr, $request->getQueryArr());
 
 	}
 
@@ -517,11 +473,6 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$result = $request->alter_query($changes, false);
 
-		$reflection = new ReflectionClass($request);
-		$property = $reflection->getProperty("info");
-		$property->setAccessible(true);
-		$info = $property->getValue($request);
-
 		$query       = "host=Chevron.com&port=8080&user=goose&pass=dog&spaces=goose+is+a+dog";
 		$query_arr = array(
 			"host"   => "Chevron.com",
@@ -531,8 +482,8 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 			"spaces" => "goose is a dog",
 		);
 
-		$this->assertEquals($query, $info["query"], "Request::alter_query failed to alter and not perserve the query string");
-		$this->assertEquals($query_arr, $info["query_arr"], "Request::alter_query failed to alter and not preserve the query array");
+		$this->assertEquals($query, $request->getQuery());
+		$this->assertEquals($query_arr, $request->getQueryArr());
 
 	}
 
@@ -554,36 +505,21 @@ class BaseRequestTest extends PHPUnit_Framework_TestCase {
 
 		$url = "http://local.testing.com/dir/file.html?host=Chevron.com&port=8080&user=goose&pass=dog&spaces=goose+is+a+dog";
 
-		$this->assertEquals($url, $result, "Request::rebuild failed to rebuild the altered request");
+		$this->assertEquals($url, $result);
 	}
 
 	public function test_magic_get(){
 		$request = $this->get_seed_request_absolute();
 
-		$scheme  = $request->scheme;
-		$domain  = $request->domain;
-		$host    = $request->host;
-		$dirname = $request->dirname;
+		$scheme  = $request->getScheme();
+		$domain  = $request->getDomain();
+		$host    = $request->getHost();
+		$dirname = $request->getDirname();
 
 		$this->assertEquals("http",              $scheme,  "Request::__get failed to get the scheme property");
 		$this->assertEquals("testing",           $domain,  "Request::__get failed to get the domain property");
 		$this->assertEquals("local.testing.com", $host,    "Request::__get failed to get the host property");
 		$this->assertEquals("/dir",              $dirname, "Request::__get failed to get the dirname property");
-
-	}
-
-	public function test_magic_isset(){
-		$request = $this->get_seed_request_absolute();
-
-		$user    = isset($request->user);
-		$pass    = isset($request->pass);
-		$host    = isset($request->host);
-		$dirname = isset($request->dirname);
-
-		$this->assertFalse($user,   "Request::__isset failed to return the correct value");
-		$this->assertFalse($pass,   "Request::__isset failed to return the correct value");
-		$this->assertTrue($host,    "Request::__isset failed to return the correct value");
-		$this->assertTrue($dirname, "Request::__isset failed to return the correct value");
 
 	}
 
