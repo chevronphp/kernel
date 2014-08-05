@@ -43,7 +43,7 @@ class ErrorController extends AbstractController {
 	/**
 	 * handle the 500 error
 	 */
-	function _500(500){
+	function _500(){
 		$this->setErrorHeaders(500);
 		return function(){
 			echo "@#$% Oh Noes!!";
