@@ -134,7 +134,7 @@ class BaseRequest {
 	 * @param bool $preserve Whether to preserve the current query
 	 * @return string
 	 */
-	function rebuild( array $params = array(), $preserve = true ) {
+	function rebuild(array $params = array(), $preserve = true) {
 		$this->alter_query($params, $preserve);
 
 		return $this->build();
@@ -149,20 +149,20 @@ class BaseRequest {
 	static function build_url( BaseRequest $request){
 
 		$absolute = "";
-		if(!empty($request->getHost())){
+		if($request->getHost()){
 
 			$scheme = "http";
-			if(!empty($request->getScheme())){
+			if($request->getScheme()){
 				$scheme = $request->getScheme();
 			}
 
 			$auth_prefix = "";
-			if(!empty($request->getUser())){
+			if($request->getUser()){
 				$auth_prefix = sprintf("%s:%s@", $request->getUser(), $request->getPass());
 			}
 
 			$port = "";
-			if(!empty($request->getPort())){
+			if($request->getPort()){
 				switch(true){
 					case $request->getPort() == 80  : break;
 					case $request->getPort() == 443 :
@@ -179,12 +179,12 @@ class BaseRequest {
 		}
 
 		$path = "";
-		if(!empty($request->getPath())){
+		if($request->getPath()){
 			$path = ltrim($request->getPath(), "/");
 		}
 
 		$query = "";
-		if(!empty($request->getQueryArr())){
+		if($request->getQueryArr()){
 			$query = http_build_query($request->getQueryArr(), "no_", "&");
 			$query = "?{$query}";
 		}
