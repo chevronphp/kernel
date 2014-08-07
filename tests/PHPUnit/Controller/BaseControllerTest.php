@@ -2,13 +2,11 @@
 
 namespace Chevron\Kernel\ControllerTests;
 
-use \Chevron\Kernel\Controller\AbstractController;
+use \Chevron\Kernel\Controller\BaseController;
 
-class TestAbstractController extends AbstractController {
-	function __invoke(){ /* noop */ }
-}
+class TestBaseController extends BaseController {}
 
-class AbstractControllerTest extends \PHPUnit_Framework_TestCase {
+class BaseControllerTest extends \PHPUnit_Framework_TestCase {
 
 	function getTestDi(){
 		return $this->getMock("\\Chevron\\Containers\\Interfaces\\DiInterface");
@@ -18,7 +16,7 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase {
 		$route = $this->getMock("\\Chevron\\Kernel\\Router\\Interfaces\\RouteInterface");
 
 		$route->method("getController")
-			  ->willReturn('\\Chevron\\Kernel\\ControllerTests\\TestAbstractController');
+			  ->willReturn('\\Chevron\\Kernel\\ControllerTests\\TestBaseController');
 
 		$route->method("getAction")
 			  ->willReturn('ActionThings');
@@ -33,13 +31,16 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase {
 
 	}
 
+	/**
+	 * @expectedException \Chevron\Kernel\Controller\Exceptions\ActionNotFoundException
+	 */
 	function test___construct(){
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute();
 
-		$controller = new TestAbstractController($di, $route);
+		$controller = new TestBaseController($di, $route);
 
-		$this->assertInstanceOf("\\Chevron\\Kernel\\Controller\\Interfaces\\AbstractControllerInterface", $controller);
+		$view = $controller();
 	}
 
 }
