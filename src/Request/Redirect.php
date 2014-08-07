@@ -18,7 +18,7 @@ class Redirect {
 			$redirect = new BaseRequest($redirect, $params);
 		}
 
-		if(isset($redirect->scheme) && $force_ssl){
+		if(isset($redirect->getScheme()) && $force_ssl){
 			$redirect->alter_request(array("scheme" => "https"));
 		}
 
