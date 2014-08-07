@@ -31,7 +31,9 @@ class BaseRequest {
 			throw new \Exception("A valid url must be supplied to parse");
 		}
 
-		$info = parse_url( $url );
+		if(($info = parse_url( $url )) === false){
+			throw new \Exception("Cannot parse seriously malformed URL");
+		}
 
 		$info = $this->parse_extended($info);
 
