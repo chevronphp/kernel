@@ -99,6 +99,7 @@ class CurrentRequest extends BaseRequest {
 	 * @deprecated
 	 */
 	function base_href( $parsed = false ) {
+		$_BASE = array();
 		$_BASE["PROTOCOL"] = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "https" : "http";
 		// $_BASE["SERVER_ADDR"] = $_SERVER["SERVER_ADDR"];
 		$_BASE["HOST"] = trim(strtolower($_SERVER['SERVER_NAME']));
