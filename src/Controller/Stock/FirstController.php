@@ -1,6 +1,6 @@
 <?php
 
-namespace \Chevron\Kernel\Controller\Stock;
+namespace Chevron\Kernel\Controller\Stock;
 
 use \Chevron\Kernel\Controller\AbstractController;
 /**
