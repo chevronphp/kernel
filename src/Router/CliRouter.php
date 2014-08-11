@@ -9,6 +9,8 @@ namespace Chevron\Kernel\Router;
  */
 class CliRouter extends AbstractRouter implements Interfaces\RouterInterface {
 
+	use Traits\DefaultActionFormatAwareTrait;
+
 	/**
 	 * public access to get a populated Route
 	 *
@@ -47,8 +49,8 @@ class CliRouter extends AbstractRouter implements Interfaces\RouterInterface {
 			$controller = $class;
 		}
 
-		$method = "index";
-		// $format = "html";
+		$method = $this->default_action;
+		// $format = $this->default_format;
 		if($action){
 			$method = $action;
 			if(($pos = strpos($action, ".")) !== false){
