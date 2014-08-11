@@ -14,7 +14,9 @@ class FirstController extends AbstractController {
 	 */
 	function __invoke(){
 		$action = $this->getRoute()->getAction();
-		echo "{$action}";
+		return function(){
+			echo "{$action}";
+		};
 	}
 
 }
