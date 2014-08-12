@@ -14,14 +14,28 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	function test___toString_1(){
 		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", "action", null, ["query" => "param"]);
 		$result = (string)$obj;
-		$expected = "/namespace/controller/action?query=param";
+		$expected = "namespace/controller/action?query=param";
 		$this->assertEquals($expected, $result);
 	}
 
 	function test___toString_2(){
 		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", null, "json", []);
 		$result = (string)$obj;
-		$expected = "/namespace/controller/.json";
+		$expected = "namespace/controller/.json";
+		$this->assertEquals($expected, $result);
+	}
+
+	function test___toString_3(){
+		$obj = new \Chevron\Kernel\Router\Route("Namespace\\Controller", null, "json", []);
+		$result = (string)$obj;
+		$expected = "namespace/controller/.json";
+		$this->assertEquals($expected, $result);
+	}
+
+	function test_linkify(){
+		$obj = new \Chevron\Kernel\Router\Route("\\Controller", null, "json", []);
+		$result = $obj->link("\\Namespace\\");
+		$expected = "namespace/controller/.json";
 		$this->assertEquals($expected, $result);
 	}
 

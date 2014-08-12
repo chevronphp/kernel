@@ -88,6 +88,9 @@ class Route implements Interfaces\RouteInterface{
 		return $this->params;
 	}
 
+	/**
+	 * create a link looking string from the properties of the route
+	 */
 	function __toString(){
 
 		$route = strtolower(strtr(trim($this->getController(), DIRECTORY_SEPARATOR), "\\", "/")) . "/";
@@ -104,8 +107,18 @@ class Route implements Interfaces\RouteInterface{
 			$route .= "?" . http_build_query($this->getParams());
 		}
 
+		return ltrim($route, "/");
+	}
 
-		return $route;
+	/**
+	 * add a namespace prefix to the route's link looking string on the off
+	 * chance that you're dispatching from a specific namespace
+	 * @param string $namespace The prefix for the link
+	 */
+	function link($namespace){
+		$namespace = strtolower(trim($namespace, "\\/"));
+		$link = ltrim($this->__toString(), "/");
+		return ltrim("{$namespace}/{$link}", "/");
 	}
 
 }
