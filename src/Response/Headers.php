@@ -5,7 +5,7 @@ namespace Chevron\Kernel\Response;
 /**
  *
  */
-class Headers {
+class Headers implements Interfaces\HeadersInterface {
 
 	const HEADER_STATUS_CODE = 102;
 
