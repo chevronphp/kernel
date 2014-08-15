@@ -10,6 +10,12 @@ use \Chevron\Kernel\Router;
  * are excluded.
  */
 
+$baseDir = dirname(__DIR__);
+$appDir  = "{$baseDir}/application";
+
+$applicationNamespace = "\\ChevronWeb\\";
+$controllerNamespace  = "\\ChevronWeb\\Controllers\\";
+
 // autoloader(s) go here
 
 // $di = Di goes here
@@ -23,10 +29,20 @@ $route  = $router->match($_SERVER["REQUEST_URI"]);
 $dispatcher = new Dispatcher\Dispatcher($di);
 
 try{
-	$controller = $dispatcher->dispatch("\\Chevron\\Kernel\\Controller\\Stock\\", $route);
-}catch( Dispatcher\Exceptions\ControllerNotFoundException $e ){
-	$route = new Router\Route("ErrorController", "_404");
-	$controller = $dispatcher->dispatch("\\Chevron\\Kernel\\Controller\\Stock\\", $route);
+	$controller = $dispatcher->dispatch($controllerNamespace, $route);
+}catch(Dispatcher\Exceptions\ControllerNotFoundException $e){
+	$error = new Router\Route("ErrorController", "_404");
+	$controller = $dispatcher->dispatch($controllerNamespace, $error);
+}
+
+/**
+ * trade our controller for an invokable response
+ */
+$view = $controller();
+if(!is_callable($view)){
+	$error = new Router\Route("ErrorController", "_500");
+	$controller = $dispatcher->dispatch($controllerNamespace, $error);
+	$view = $controller();
 }
 
 // at some point you might want to SEND headers, but only if you want to
