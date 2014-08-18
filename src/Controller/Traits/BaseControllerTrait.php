@@ -18,13 +18,13 @@ trait BaseControllerTrait {
 	function __invoke(){
 
 		$actions = [
-			$this->getAutoInitFunc(),
+			$this->getAutoMethodFunc(),
 			$this->getRoute()->getAction(),
 		];
 
 		foreach($actions as $action){
 			if(method_exists($this, $action)){
-				$return = $this->$action();
+				$return = call_user_func([$this, $action]);
 				if(is_callable($return)){
 					return $return;
 				}

@@ -56,7 +56,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase {
 
 		$controller = new TestBaseController($di, $route);
 
-		$controller->setAutoInitFunc("");
+		$controller->setAutoMethodFunc("");
 
 		$view = $controller();
 	}
@@ -83,7 +83,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($controller->tested, false);
 
-		$controller->setAutoInitFunc("setTested");
+		$controller->setAutoMethodFunc("setTested");
 
 		$view = $controller();
 

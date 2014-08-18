@@ -10,7 +10,7 @@ use \Chevron\Kernel\Router\Interfaces\RouteInterface;
  */
 trait AbstractControllerTrait {
 
-	use AutoActionAwareTrait;
+	use AutoMethodAwareTrait;
 
 	/**
 	 * hold the Di
