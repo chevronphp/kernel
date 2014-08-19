@@ -2,22 +2,22 @@
 
 namespace Chevron\Kernel\Controller\Stock;
 
-use \Chevron\Kernel\Controller\AbstractController;
+use \Chevron\Kernel\Controller\BaseController;
 use \Chevron\Kernel\Response\Interfaces\HeadersInterface;
+use \Chevron\Kernel\Controller\Exceptions;
 /**
  * an example error controller
  * @package Chevron\Kernel
  */
-class ErrorController extends AbstractController {
+class ErrorController extends BaseController {
 
 	/**
 	 * do our action
 	 */
 	function __invoke(){
-		$action = $this->getRoute()->getAction();
-		if(method_exists($this, $action)){
-			return $this->$action();
-		}else{
+		try{
+			return parent::__invoke();
+		}catch(Exceptions\ActionNotFoundException $e){
 			return $this->_500();
 		}
 	}
