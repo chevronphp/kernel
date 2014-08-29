@@ -1,8 +1,8 @@
 {
-	"name"        : "henderjon/chevron-kernel",
+	"name"        : "chevron/kernel",
 	"type"        : "library",
 	"description" : "a subset of tools for application development",
-	"homepage"    : "http://github.com/henderjon/chevron.kernel",
+	"homepage"    : "http://github.com/chevronphp/kernel",
 	"license"     : "BSD-3-Clause",
 	"authors"     : [
 		{
@@ -15,8 +15,8 @@
 		"irc" : "irc://irc.freenode.org/henderjon"
 	},
 	"require": {
-		"php"                          : ">=5.4",
-		"henderjon/chevron-containers" : "~3.0"
+		"php"                : ">=5.4",
+		"chevron/containers" : "~3.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit" : "~4.0",
