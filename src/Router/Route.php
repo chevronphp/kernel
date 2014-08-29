@@ -115,10 +115,13 @@ class Route implements Interfaces\RouteInterface{
 	 * chance that you're dispatching from a specific namespace
 	 * @param string $namespace The prefix for the link
 	 */
-	function link($namespace){
-		$namespace = strtolower(trim($namespace, "\\/"));
+	function link($namespace = ""){
+		$prefix = "";
+		if($namespace){
+			$prefix = strtolower(trim($namespace, "\\/"));
+		}
 		$link = ltrim($this->__toString(), "/");
-		return ltrim("{$namespace}/{$link}", "/");
+		return ltrim("{$prefix}/{$link}", "/");
 	}
 
 }
