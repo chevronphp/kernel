@@ -1,4 +1,4 @@
-# chevron.kernel
+# chevron/kernel
 
 Kernel comprises a router, dispatcher, and controller. With a little work they
 could probably be independent pieces but if you want to use one you'll have to
