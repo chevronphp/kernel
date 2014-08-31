@@ -8,4 +8,9 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-abstract class AbstractRouter {}
+abstract class AbstractRouter {
+
+	use Traits\DefaultActionAwareTrait;
+	use Traits\DefaultFormatAwareTrait;
+
+}

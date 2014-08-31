@@ -23,8 +23,6 @@ namespace Chevron\Kernel\Router;
  */
 class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
 
-	use Traits\DefaultActionFormatAwareTrait;
-
 	/**
 	 * public access to get a populated Route
 	 *
