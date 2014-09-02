@@ -48,9 +48,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute("BasicController");
 
-		$router = new Dispatcher($di);
+		$router = new Dispatcher([$di]);
 
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route);
+		$controller = $router->dispatch("Chevron\\Kernel\\", $route->getController());
 
 		$this->assertTrue(is_callable($controller));
 		$this->assertTrue($controller InstanceOf BasicController);
@@ -65,9 +65,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute("BasicController2");
 
-		$router = new Dispatcher($di);
+		$router = new Dispatcher([$di]);
 
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route, [5,6,7,$di]);
+		$controller = $router->dispatch("Chevron\\Kernel\\", $route->getController(), [5,6,7]);
 
 		$this->assertTrue(is_callable($controller));
 		$this->assertTrue($controller InstanceOf BasicController2);
@@ -79,9 +79,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute("BasicController3");
 
-		$router = new Dispatcher($di);
+		$router = new Dispatcher([$di]);
 
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route, [5,6,7,$di]);
+		$controller = $router->dispatch("Chevron\\Kernel\\", $route->getController(), [5,6,7]);
 
 		$this->assertTrue(is_callable($controller));
 		$this->assertTrue($controller InstanceOf BasicController3);
@@ -96,9 +96,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute("BasicController");
 
-		$router = new Dispatcher($di);
+		$router = new Dispatcher([$di]);
 
-		$controller = $router->dispatch("Chervo\\", $route);
+		$controller = $router->dispatch("Chervo\\", $route->getController());
 
 	}
 

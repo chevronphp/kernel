@@ -2,8 +2,6 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
-use \Chevron\Containers\Interfaces\DiInterface;
-use \Chevron\Kernel\Router\Interfaces\RouteInterface;
 /**
  * our dispatcher is very simple
  * @package Chevron\Kernel
@@ -13,32 +11,32 @@ class Dispatcher {
 	/**
 	 * hold our Di
 	 */
-	protected $di;
+	protected $defaultPayload = [];
 
 	/**
 	 * set out Di
 	 */
-	function __construct( DiInterface $di ){
-		$this->di = $di;
+	function __construct( array $defaultPayload = [] ){
+		$this->defaultPayload = $defaultPayload;
 	}
 
 	/**
 	 * do the dispatching
 	 * @return \Chevron\Kernel\Controller\Interfaces\AbstractControllerInterface
 	 */
-	function dispatch( $namespace, RouteInterface $route, array $args = [] ){
+	function dispatch( $namespace, $controller, array $instanceArgs = [] ){
 
-		$controller = sprintf("\\%s\\%s",
-			trim($namespace, "\\"),
-			trim($route->getController(), "\\")
-		);
+		$fqnsc = "\\";
+		$fqnsc .= trim($namespace, "\\");
+		$fqnsc .= "\\";
+		$fqnsc .= trim($controller, "\\");
 
-		if(!class_exists($controller)){
+		if(!class_exists($fqnsc)){
 			throw new Exceptions\ControllerNotFoundException;
 		}
 
-		$instance = new \ReflectionClass($controller);
-		$instanceArgs = [$this->di, $route] + $args;
+		$instance = new \ReflectionClass($fqnsc);
+		$instanceArgs = $this->defaultPayload + $instanceArgs;
 
 		try{
 			return $instance->newInstanceArgs($instanceArgs);
