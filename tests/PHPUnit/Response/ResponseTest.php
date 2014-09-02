@@ -19,9 +19,9 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 	}
 
 
-	function test_detectContentTypeByExtension( ) {
+	function test_setContentType( ) {
 		$obj = $this->getObj();
-		$expected = $obj->detectContentTypeByExtension("html");
+		$expected = $obj->setContentType("html");
 		$this->assertEquals($expected, "Content-Type: text/html");
 	}
 

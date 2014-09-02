@@ -25,7 +25,7 @@ class ErrorController extends BaseController {
 	protected function setErrorHeaders($status){
 		$response = $this->di->get("response");
 		if($response InstanceOf HeadersInterface){
-			$response->detectContentTypeByExtension($this->getRoute()->getFormat());
+			$response->setContentType($this->getRoute()->getFormat());
 			$response->setStatusCode($status);
 		}
 	}

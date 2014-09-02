@@ -28,7 +28,7 @@ interface HeadersInterface {
 	 * @param string $extension The type to retrieve
 	 * @return string
 	 */
-	function detectContentTypeByExtension( $extension );
+	function setContentType( $extension );
 
 	/**
 	 * @param string $url
