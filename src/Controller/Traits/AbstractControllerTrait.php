@@ -11,16 +11,8 @@ use \Chevron\Kernel\Router\Interfaces\RouteInterface;
 trait AbstractControllerTrait {
 
 	use AutoMethodAwareTrait;
-
-	/**
-	 * hold the Di
-	 */
-	protected $di;
-
-	/**
-	 * hold the route for this controller
-	 */
-	protected $route;
+	use DiAwareTrait;
+	use RouteAwareTrait;
 
 	/**
 	 * set the Di and Route for this controller
@@ -28,22 +20,6 @@ trait AbstractControllerTrait {
 	function __construct(DiInterface $di, RouteInterface $route){
 		$this->di    = $di;
 		$this->route = $route;
-	}
-
-	/**
-	 * get the Di
-	 * @return \Chevron\Containers\Interfaces\DiInterface
-	 */
-	function getDi(){
-		return $this->di;
-	}
-
-	/**
-	 * get the route
-	 * @return \Chevron\Kernel\Router\Interfaces\RouteInterface
-	 */
-	function getRoute(){
-		return $this->route;
 	}
 
 	/**
