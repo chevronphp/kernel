@@ -26,7 +26,7 @@ class Dispatcher {
 	 * do the dispatching
 	 * @return \Chevron\Kernel\Controller\Interfaces\AbstractControllerInterface
 	 */
-	function dispatch( $namespace, RouteInterface $route ){
+	function dispatch( $namespace, RouteInterface $route, array $args = [] ){
 
 		$controller = sprintf("\\%s\\%s",
 			trim($namespace, "\\"),
@@ -37,7 +37,22 @@ class Dispatcher {
 			throw new Exceptions\ControllerNotFoundException;
 		}
 
-		return new $controller($this->di, $route);
+		$instance = new \ReflectionClass($controller);
+		$instanceArgs = [$this->di, $route] + $args;
+
+		try{
+			return $instance->newInstanceArgs($instanceArgs);
+		}catch(\ReflectionException $e){
+			try{
+				return $instance->newInstance();
+			}catch(\ReflectionException $e){
+				// return $instance->newInstanceWithoutConstructor();
+				$message = "Controllers must have an accessible constructor.";
+				throw new Exceptions\InaccessibleConstructorException($message, 0, $e);
+			}
+		}
+
+		// return new $controller($this->di, $route);
 
 	}
 
