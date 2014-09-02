@@ -21,6 +21,8 @@ trait RouteAwareTrait {
 	 * set the route
 	 * @return \Chevron\Kernel\Router\Interfaces\RouteInterface
 	 */
-	function setRoute(){}
+	function setRoute($route){
+		$this->route = $route;
+	}
 
 }
