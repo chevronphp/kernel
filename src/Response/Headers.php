@@ -7,8 +7,9 @@ namespace Chevron\Kernel\Response;
  */
 class Headers implements Interfaces\HeadersInterface {
 
-	use Traits\StatusCodesTrait;
-	use Traits\ContentTypesTrait;
+	use Traits\StatusCodeAwareTrait;
+	use Traits\ContentTypeAwareTrait;
+	use Traits\RedirectAwareTrait;
 
 	const HEADER_STATUS_CODE = 102;
 
@@ -65,57 +66,6 @@ class Headers implements Interfaces\HeadersInterface {
 				$callback($header, $key, $value);
 			}
 		}
-	}
-
-	/**
-	 * Method to generate the correct content-type header for the response
-	 *
-	 * @param string $extension The type to retrieve
-	 * @return string
-	 */
-	public function setContentType( $extension ) {
-		$extension = strtolower(trim($extension, " ."));
-
-		$value = "text/html";
-		if(isset($this->content_types[$extension])){
-			$value = $this->content_types[$extension];
-		}
-
-		return $this->setHeader('Content-Type', $value);
-	}
-
-
-	/**
-	 * @param string $url
-	 * @param int    $statusCode
-	 * @throws \Exception
-	 */
-	public function setRedirect( $url, $statusCode = 302 ) {
-		if( intval($statusCode / 100) != 3 ) {
-			throw new \Exception("{$statusCode} is not a valid redirect");
-		}
-
-		$this->setStatusCode($statusCode);
-		$this->setHeader('Location', $url);
-	}
-
-	/**
-	 * method to to generate the correct HTTP header for the response
-	 *
-	 * @param int $statusCode The status code to retrieve
-	 * @return string
-	 * @throws \Exception
-	 */
-	public function setStatusCode( $statusCode ) {
-
-		if( !isset($this->status_codes[$statusCode]) ) {
-			throw new \Exception("Unknown Status Code {$statusCode}", $statusCode);
-		}
-
-		$header = "HTTP/1.1 {$statusCode} " . $this->status_codes[$statusCode];
-		$this->setHeader(static::HEADER_STATUS_CODE, $header);
-
-		return $header;
 	}
 
 }

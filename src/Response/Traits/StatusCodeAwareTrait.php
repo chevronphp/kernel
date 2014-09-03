@@ -2,7 +2,7 @@
 
 namespace Chevron\Kernel\Response\Traits;
 
-trait StatusCodesTrait {
+trait StatusCodeAwareTrait {
 
 	protected $status_codes = array(
 		100 => 'Continue',
@@ -62,5 +62,24 @@ trait StatusCodesTrait {
 		509 => 'Bandwidth Limit Exceeded',
 		510 => 'Not Extended'
 	);
+
+	/**
+	 * method to to generate the correct HTTP header for the response
+	 *
+	 * @param int $statusCode The status code to retrieve
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function setStatusCode( $statusCode ) {
+
+		if( !isset($this->status_codes[$statusCode]) ) {
+			throw new \Exception("Unknown Status Code {$statusCode}", $statusCode);
+		}
+
+		$header = "HTTP/1.1 {$statusCode} " . $this->status_codes[$statusCode];
+		$this->setHeader(static::HEADER_STATUS_CODE, $header);
+
+		return $header;
+	}
 
 }
