@@ -38,7 +38,8 @@ class Dispatcher {
 	}
 
 	/**
-	 * do the dispatching
+	 * Do the dispatching. The resulting closure calls init(), and __invoke(). If a
+	 * method name is passed at call time, it supercedes __invoke()
 	 * @return \Chevron\Kernel\Controller\Interfaces\AbstractControllerInterface
 	 */
 	function dispatch( RouteInterface $route ){
