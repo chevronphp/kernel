@@ -82,4 +82,6 @@ trait StatusCodeAwareTrait {
 		return $header;
 	}
 
+	abstract function setHeader($k, $v);
+
 }

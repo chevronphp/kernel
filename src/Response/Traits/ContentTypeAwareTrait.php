@@ -28,4 +28,6 @@ trait ContentTypeAwareTrait {
 		return $this->setHeader('Content-Type', $value);
 	}
 
+	abstract function setHeader($k, $v);
+
 }

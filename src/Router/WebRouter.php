@@ -53,7 +53,7 @@ class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
 
 		$parts = explode("/", $url["path"]);
 		$action = array_pop($parts); // methods are lowercase
-		array_walk($parts, function(&$v, $k){
+		array_walk($parts, function(&$v){ //, $k
 			$v = ucwords($v);
 		});
 		$class = implode("\\", $parts);

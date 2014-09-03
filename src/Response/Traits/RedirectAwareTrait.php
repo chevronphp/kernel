@@ -18,4 +18,7 @@ trait RedirectAwareTrait {
 		$this->setHeader('Location', $url);
 	}
 
+	abstract function setHeader($k, $v);
+	abstract function setStatusCode($v);
+
 }
