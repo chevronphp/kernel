@@ -3,19 +3,14 @@
 namespace Chevron\Kernel\DispatcherTests;
 
 use \Chevron\Kernel\Dispatcher\Dispatcher;
+use \Chevron\Kernel\Dispatcher\DispatchableInterface;
 
-class BasicController {
-	function __construct(){}
-	function __invoke(){}
-}
-
-class BasicController2 {
-	private function __construct(){}
-	function __invoke(){}
-}
-
-class BasicController3 {
-	function __invoke(){}
+class BasicController implements DispatchableInterface {
+	protected $called;
+	function __construct($di, $route){}
+	function __invoke(){ return $this; }
+	function init(){ $this->called = 323; }
+	function getCalled(){ return $this->called; }
 }
 
 class DispatcherTest extends \PHPUnit_Framework_TestCase {
@@ -28,7 +23,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$route = $this->getMock("\\Chevron\\Kernel\\Router\\Interfaces\\RouteInterface");
 
 		$route->method("getController")
-			  ->willReturn("DispatcherTests\\{$type}");
+			  ->willReturn("DispatcherTests\\BasicController");
 
 		$route->method("getAction")
 			  ->willReturn("ActionThings");
@@ -48,57 +43,29 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute("BasicController");
 
-		$router = new Dispatcher([$di]);
+		$dispatcher = new Dispatcher($di, "Chevron\\Kernel\\");
 
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route->getController());
+		$controller = call_user_func($dispatcher->dispatch($route));
 
-		$this->assertTrue(is_callable($controller));
+		// note the invokation
 		$this->assertTrue($controller InstanceOf BasicController);
+		$this->assertEquals($controller->getCalled() , 323);
 
 	}
+
 
 	/**
-	 * @expectedException \Chevron\Kernel\Dispatcher\Exceptions\InaccessibleConstructorException
-	 */
-	function test_dispatch_catch_private(){
-
-		$di    = $this->getTestDi();
-		$route = $this->getTestRoute("BasicController2");
-
-		$router = new Dispatcher([$di]);
-
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route->getController(), [5,6,7]);
-
-		$this->assertTrue(is_callable($controller));
-		$this->assertTrue($controller InstanceOf BasicController2);
-
-	}
-
-	function test_dispatch_catch_without(){
-
-		$di    = $this->getTestDi();
-		$route = $this->getTestRoute("BasicController3");
-
-		$router = new Dispatcher([$di]);
-
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route->getController(), [5,6,7]);
-
-		$this->assertTrue(is_callable($controller));
-		$this->assertTrue($controller InstanceOf BasicController3);
-
-	}
-
-	/**
-	 * @expectedException \Chevron\Kernel\Dispatcher\Exceptions\ControllerNotFoundException
+	 * @expectedException \Chevron\Kernel\Dispatcher\ControllerNotFoundException
 	 */
 	function test_ControllerNotFoundException(){
 
 		$di    = $this->getTestDi();
 		$route = $this->getTestRoute("BasicController");
 
-		$router = new Dispatcher([$di]);
+		$dispatcher = new Dispatcher($di);
+		$dispatcher->setNamespace("Chervo\\");
 
-		$controller = $router->dispatch("Chervo\\", $route->getController());
+		$controller = $dispatcher->dispatch($route);
 
 	}
 

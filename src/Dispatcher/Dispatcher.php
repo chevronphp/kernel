@@ -2,6 +2,8 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
+use Chevron\Containers\Interfaces\DiInterface;
+use Chevron\Kernel\Router\Interfaces\RouteInterface;
 /**
  * our dispatcher is very simple
  * @package Chevron\Kernel
@@ -11,46 +13,65 @@ class Dispatcher {
 	/**
 	 * hold our Di
 	 */
-	protected $defaultPayload = [];
+	protected $di;
+
+	/**
+	 * the root namspace from which to dispatch
+	 */
+	protected $namespace;
 
 	/**
 	 * set out Di
 	 */
-	function __construct( array $defaultPayload = [] ){
-		$this->defaultPayload = $defaultPayload;
+	function __construct( DiInterface $di, $namespace = null ){
+		$this->di = $di;
+		$this->namespace = $namespace;
+	}
+
+	/**
+	 * set the root namespace from which to dispatch
+	 * @param string $namespace The namespace
+	 * @return void
+	 */
+	function setNamespace($namespace){
+		$this->namespace = $namespace;
 	}
 
 	/**
 	 * do the dispatching
 	 * @return \Chevron\Kernel\Controller\Interfaces\AbstractControllerInterface
 	 */
-	function dispatch( $namespace, $controller, array $instanceArgs = [] ){
+	function dispatch( RouteInterface $route ){
 
 		$fqnsc = "\\";
-		$fqnsc .= trim($namespace, "\\");
-		$fqnsc .= "\\";
-		$fqnsc .= trim($controller, "\\");
+		if($this->namespace){
+			$fqnsc .= trim($this->namespace, "\\");
+			$fqnsc .= "\\";
+		}
+		$fqnsc .= trim($route->getController(), "\\");
 
 		if(!class_exists($fqnsc)){
-			throw new Exceptions\ControllerNotFoundException;
+			throw new ControllerNotFoundException;
 		}
 
 		$instance = new \ReflectionClass($fqnsc);
-		$instanceArgs = $this->defaultPayload + $instanceArgs;
 
-		try{
-			return $instance->newInstanceArgs($instanceArgs);
-		}catch(\ReflectionException $e){
-			try{
-				return $instance->newInstance();
-			}catch(\ReflectionException $e){
-				// return $instance->newInstanceWithoutConstructor();
-				$message = "Controllers must have an accessible constructor.";
-				throw new Exceptions\InaccessibleConstructorException($message, 0, $e);
-			}
+		if(!$instance->implementsInterface(__NAMESPACE__ . "\\DispatchableInterface")){
+			throw new NonDispatchableObjectException;
 		}
 
-		// return new $controller($this->di, $route);
+		$object = $instance->newInstance($this->di, $route);
+
+		return function($method = "") use ($object){
+
+			call_user_func([$object, "init"]);
+
+			if($method){
+				$object = [$object, $method];
+			}
+
+			return call_user_func($object);
+		};
 
 	}
 
