@@ -9,6 +9,12 @@ namespace Chevron\Kernel\Router;
  */
 class Route implements Interfaces\RouteInterface{
 
+	const CONTROLLER_KEY = "controller";
+
+	const ACTION_KEY     = "action";
+
+	const FORMAT_KEY     = "format";
+
 	/**
 	 * the value to return as the requested controller.
 	 *
@@ -86,6 +92,18 @@ class Route implements Interfaces\RouteInterface{
 	 */
 	function getParams(){
 		return $this->params;
+	}
+
+	/**
+	 * output the route as an array
+	 * @return array
+	 */
+	function toArray(){
+		return [
+			static::CONTROLLER_KEY => $this->getController(),
+			static::ACTION_KEY     => $this->getAction(),
+			static::FORMAT_KEY     => $this->getFormat(),
+		];
 	}
 
 	/**
