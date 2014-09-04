@@ -13,8 +13,8 @@ use \Chevron\Kernel\Router;
 $baseDir = dirname(__DIR__);
 $appDir  = "{$baseDir}/application";
 
-$applicationNamespace = "\\ChevronWeb\\";
-$controllerNamespace  = "\\ChevronWeb\\Controllers\\";
+$applicationNs = "\\ChevronWeb\\";
+$controllerNs  = "\\ChevronWeb\\Controllers\\";
 
 // autoloader(s) go here
 
@@ -26,30 +26,20 @@ $route  = $router->match($_SERVER["REQUEST_URI"]);
 // create an object to collect headers
 // $headers = new Response\Headers;
 
-$dispatcher = new Dispatcher\Dispatcher($di);
+$dispatcher = new Dispatcher\Dispatcher( $di );
+
+$error = new Router\Route("ErrorController");
 
 try{
-	$controller = $dispatcher->dispatch($controllerNamespace, $route);
+	$controller = $dispatcher->dispatch($controllerNs, $route);
+	$method = "";
 }catch(Dispatcher\Exceptions\ControllerNotFoundException $e){
-	$error = new Router\Route("ErrorController", "_404");
-	$controller = $dispatcher->dispatch($controllerNamespace, $error);
-}
-
-/**
- * trade our controller for an invokable response
- */
-$view = $controller();
-if(!is_callable($view)){
-	$error = new Router\Route("ErrorController", "_500");
-	$controller = $dispatcher->dispatch($controllerNamespace, $error);
-	$view = $controller();
+	$controller = $dispatcher->dispatch($controllerNs, $error);
+	$method = "_404";
 }
 
 // at some point you might want to SEND headers, but only if you want to
 // $headers->eachHeader("header");
 
 // exec the controller -- returns a *callable* ... most likely a view (maybe a closure)
-$view = $controller();
-
-// you might consider passing the view to a layout (for web)
-$view();
+$controller($method);

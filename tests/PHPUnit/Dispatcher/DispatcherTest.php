@@ -3,28 +3,33 @@
 namespace Chevron\Kernel\DispatcherTests;
 
 use \Chevron\Kernel\Dispatcher\Dispatcher;
+use \Chevron\Kernel\Dispatcher\DispatchableInterface;
 
-class BasicController {
-	function __invoke(){}
+class BasicController implements DispatchableInterface {
+	protected $called;
+	function __construct($di, $route){}
+	function __invoke(){ return $this; }
+	function init(){ $this->called = 323; }
+	function getCalled(){ return $this->called; }
 }
 
 class DispatcherTest extends \PHPUnit_Framework_TestCase {
 
 	function getTestDi(){
-		return $this->getMock("\\Chevron\\Containers\\Deferred");
+		return new \stdClass;
 	}
 
-	function getTestRoute(){
-		$route = $this->getMock("\\Chevron\\Kernel\\Router\\Interfaces\\RouteInterface");
+	function getTestRoute($type){
+		$route = $this->getMock("\\Chevron\\Kernel\\Router\\RouteInterface");
 
 		$route->method("getController")
-			  ->willReturn('DispatcherTests\\BasicController');
+			  ->willReturn("DispatcherTests\\BasicController");
 
 		$route->method("getAction")
-			  ->willReturn('ActionThings');
+			  ->willReturn("ActionThings");
 
 		$route->method("getFormat")
-			  ->willReturn('html');
+			  ->willReturn("html");
 
 		$route->method("getParams")
 			  ->willReturn([]);
@@ -36,27 +41,31 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 	function test_dispatch(){
 
 		$di    = $this->getTestDi();
-		$route = $this->getTestRoute();
+		$route = $this->getTestRoute("BasicController");
 
-		$router = new Dispatcher($di);
+		$dispatcher = new Dispatcher($di, "Chevron\\Kernel\\");
 
-		$controller = $router->dispatch("Chevron\\Kernel\\", $route);
+		$controller = call_user_func($dispatcher->dispatch($route));
 
-		$this->assertTrue(is_callable($controller));
+		// note the invokation
+		$this->assertTrue($controller InstanceOf BasicController);
+		$this->assertEquals($controller->getCalled() , 323);
 
 	}
 
+
 	/**
-	 * @expectedException \Chevron\Kernel\Dispatcher\Exceptions\ControllerNotFoundException
+	 * @expectedException \Chevron\Kernel\Dispatcher\ControllerNotFoundException
 	 */
 	function test_ControllerNotFoundException(){
 
 		$di    = $this->getTestDi();
-		$route = $this->getTestRoute();
+		$route = $this->getTestRoute("BasicController");
 
-		$router = new Dispatcher($di);
+		$dispatcher = new Dispatcher($di);
+		$dispatcher->setNamespace("Chervo\\");
 
-		$controller = $router->dispatch("Chervo\\", $route);
+		$controller = $dispatcher->dispatch($route);
 
 	}
 

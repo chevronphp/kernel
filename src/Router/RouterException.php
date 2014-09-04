@@ -1,8 +1,8 @@
 <?php
 
-namespace Chevron\Kernel\Exceptions;
+namespace Chevron\Kernel\Router;
 /**
  * a basic exception, locally branded
  * @package Chevron\Kernel
  */
-class KernelException extends \Exception {}
+class RouterException extends \Exception {}

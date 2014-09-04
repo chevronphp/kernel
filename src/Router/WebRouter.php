@@ -21,7 +21,7 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
+class WebRouter extends AbstractRouter implements RouterInterface {
 
 	/**
 	 * public access to get a populated Route
@@ -53,7 +53,7 @@ class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
 
 		$parts = explode("/", $url["path"]);
 		$action = array_pop($parts); // methods are lowercase
-		array_walk($parts, function(&$v, $k){
+		array_walk($parts, function(&$v){ //, $k
 			$v = ucwords($v);
 		});
 		$class = implode("\\", $parts);

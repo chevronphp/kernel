@@ -1,6 +1,6 @@
 <?php
 
-namespace Chevron\Kernel\Router\Interfaces;
+namespace Chevron\Kernel\Router;
 /**
  * the signature for our router
  *

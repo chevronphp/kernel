@@ -1,6 +1,6 @@
 <?php
 
-namespace Chevron\Kernel\Response\Interfaces;
+namespace Chevron\Kernel\Response;
 
 /**
  *
@@ -28,11 +28,12 @@ interface HeadersInterface {
 	 * @param string $extension The type to retrieve
 	 * @return string
 	 */
-	function detectContentTypeByExtension( $extension );
+	function setContentType( $extension );
 
 	/**
 	 * @param string $url
 	 * @param int    $statusCode
+	 * @return void
 	 * @throws \Exception
 	 */
 	function setRedirect( $url, $statusCode = 302 );
@@ -49,6 +50,7 @@ interface HeadersInterface {
 	/**
 	 * @param callable $callback
 	 * @param bool     $extra
+	 * @return void
 	 */
 	function eachHeader( callable $callback, $extra = false );
 

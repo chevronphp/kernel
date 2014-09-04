@@ -18,6 +18,17 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+	function test_toArray(){
+		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", "action", null, ["query" => "param"]);
+		$result = $obj->toArray();
+		$expected = [
+			\Chevron\Kernel\Router\Route::CONTROLLER_KEY => "\\Namespace\\Controller",
+			\Chevron\Kernel\Router\Route::ACTION_KEY     => "action",
+			\Chevron\Kernel\Router\Route::FORMAT_KEY     => null,
+		];
+		$this->assertEquals($expected, $result);
+	}
+
 	function test___toString_2(){
 		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", null, "json", []);
 		$result = (string)$obj;

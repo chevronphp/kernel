@@ -7,7 +7,13 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class Route implements Interfaces\RouteInterface{
+class Route implements RouteInterface{
+
+	const CONTROLLER_KEY = "controller";
+
+	const ACTION_KEY     = "action";
+
+	const FORMAT_KEY     = "format";
 
 	/**
 	 * the value to return as the requested controller.
@@ -43,15 +49,15 @@ class Route implements Interfaces\RouteInterface{
 		$this->controller = $controller;
 
 		if($action){
-			$this->action = $action;
+			$this->setAction($action);
 		}
 
 		if($format){
-			$this->format = $format;
+			$this->setFormat($format);
 		}
 
 		if($params){
-			$this->params = $params;
+			$this->setParams($params);
 		}
 
 	}
@@ -89,6 +95,18 @@ class Route implements Interfaces\RouteInterface{
 	}
 
 	/**
+	 * output the route as an array
+	 * @return array
+	 */
+	function toArray(){
+		return [
+			static::CONTROLLER_KEY => $this->getController(),
+			static::ACTION_KEY     => $this->getAction(),
+			static::FORMAT_KEY     => $this->getFormat(),
+		];
+	}
+
+	/**
 	 * create a link looking string from the properties of the route
 	 */
 	function __toString(){
@@ -122,6 +140,33 @@ class Route implements Interfaces\RouteInterface{
 		}
 		$link = ltrim($this->__toString(), "/");
 		return ltrim("{$prefix}/{$link}", "/");
+	}
+
+	/**
+	 * get the action
+	 * @param string $action
+	 * @return string
+	 */
+	function setAction($action){
+		$this->action = $action;
+	}
+
+	/**
+	 * get the format
+	 * @param string $format
+	 * @return string
+	 */
+	function setFormat($format){
+		$this->format = $format;
+	}
+
+	/**
+	 * get the params
+	 * @param array $params
+	 * @return array
+	 */
+	function setParams(array $params){
+		$this->params = $params;
 	}
 
 }
