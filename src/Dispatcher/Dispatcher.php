@@ -2,7 +2,6 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
-use Chevron\Containers\Interfaces\DiInterface;
 use Chevron\Kernel\Router\Interfaces\RouteInterface;
 /**
  * our dispatcher is very simple
@@ -21,9 +20,9 @@ class Dispatcher {
 	protected $namespace;
 
 	/**
-	 * set out Di
+	 * set our Di
 	 */
-	function __construct( DiInterface $di, $namespace = null ){
+	function __construct( $di, $namespace = null ){
 		$this->di = $di;
 		$this->namespace = $namespace;
 	}
@@ -40,7 +39,7 @@ class Dispatcher {
 	/**
 	 * Do the dispatching. The resulting closure calls init(), and __invoke(). If a
 	 * method name is passed at call time, it supercedes __invoke()
-	 * @return \Chevron\Kernel\Controller\Interfaces\AbstractControllerInterface
+	 * @return mixed
 	 */
 	function dispatch( RouteInterface $route ){
 
@@ -63,7 +62,7 @@ class Dispatcher {
 
 		$object = $instance->newInstance($this->di, $route);
 
-		return function($method = "") use ($object){
+		return function($method = "", array $args = []) use ($object){
 
 			call_user_func([$object, "init"]);
 
