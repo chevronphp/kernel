@@ -82,6 +82,10 @@ trait StatusCodeAwareTrait {
 		return $header;
 	}
 
+	/**
+	 * @param string $k
+	 * @param string $v
+	 */
 	abstract function setHeader($k, $v);
 
 }

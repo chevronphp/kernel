@@ -144,6 +144,7 @@ class Route implements RouteInterface{
 
 	/**
 	 * get the action
+	 * @param string $action
 	 * @return string
 	 */
 	function setAction($action){
@@ -152,6 +153,7 @@ class Route implements RouteInterface{
 
 	/**
 	 * get the format
+	 * @param string $format
 	 * @return string
 	 */
 	function setFormat($format){
@@ -160,6 +162,7 @@ class Route implements RouteInterface{
 
 	/**
 	 * get the params
+	 * @param array $params
 	 * @return array
 	 */
 	function setParams(array $params){

@@ -55,6 +55,7 @@ class Headers implements HeadersInterface {
 	/**
 	 * @param callable $callback
 	 * @param bool     $extra
+	 * @return void
 	 */
 	public function eachHeader( callable $callback, $extra = false ) {
 		foreach( $this->headers as $key => $value ) {

@@ -39,7 +39,7 @@ class Dispatcher {
 	/**
 	 * Do the dispatching. The resulting closure calls init(), and __invoke(). If a
 	 * method name is passed at call time, it supercedes __invoke()
-	 * @return mixed
+	 * @return \Closure
 	 */
 	function dispatch( RouteInterface $route ){
 

@@ -33,6 +33,7 @@ interface HeadersInterface {
 	/**
 	 * @param string $url
 	 * @param int    $statusCode
+	 * @return void
 	 * @throws \Exception
 	 */
 	function setRedirect( $url, $statusCode = 302 );
@@ -49,6 +50,7 @@ interface HeadersInterface {
 	/**
 	 * @param callable $callback
 	 * @param bool     $extra
+	 * @return void
 	 */
 	function eachHeader( callable $callback, $extra = false );
 
