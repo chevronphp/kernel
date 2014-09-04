@@ -9,7 +9,7 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class ShortRouter extends AbstractRouter implements Interfaces\RouterInterface {
+class ShortRouter extends AbstractRouter implements RouterInterface {
 
 	/**
 	 * a map to store our pattern => controllers

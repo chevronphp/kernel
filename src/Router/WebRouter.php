@@ -21,7 +21,7 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class WebRouter extends AbstractRouter implements Interfaces\RouterInterface {
+class WebRouter extends AbstractRouter implements RouterInterface {
 
 	/**
 	 * public access to get a populated Route

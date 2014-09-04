@@ -10,7 +10,7 @@ namespace Chevron\Kernel\Router;
  */
 abstract class AbstractRouter {
 
-	use Traits\DefaultActionAwareTrait;
-	use Traits\DefaultFormatAwareTrait;
+	use DefaultActionAwareTrait;
+	use DefaultFormatAwareTrait;
 
 }

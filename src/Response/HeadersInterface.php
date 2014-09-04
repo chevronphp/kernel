@@ -1,6 +1,6 @@
 <?php
 
-namespace Chevron\Kernel\Response\Interfaces;
+namespace Chevron\Kernel\Response;
 
 /**
  *

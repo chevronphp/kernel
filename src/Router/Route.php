@@ -7,7 +7,7 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class Route implements Interfaces\RouteInterface{
+class Route implements RouteInterface{
 
 	const CONTROLLER_KEY = "controller";
 
@@ -49,15 +49,15 @@ class Route implements Interfaces\RouteInterface{
 		$this->controller = $controller;
 
 		if($action){
-			$this->action = $action;
+			$this->setAction($action);
 		}
 
 		if($format){
-			$this->format = $format;
+			$this->setFormat($format);
 		}
 
 		if($params){
-			$this->params = $params;
+			$this->setParams($params);
 		}
 
 	}
@@ -140,6 +140,30 @@ class Route implements Interfaces\RouteInterface{
 		}
 		$link = ltrim($this->__toString(), "/");
 		return ltrim("{$prefix}/{$link}", "/");
+	}
+
+	/**
+	 * get the action
+	 * @return string
+	 */
+	function setAction($action){
+		$this->action = $action;
+	}
+
+	/**
+	 * get the format
+	 * @return string
+	 */
+	function setFormat($format){
+		$this->format = $format;
+	}
+
+	/**
+	 * get the params
+	 * @return array
+	 */
+	function setParams(array $params){
+		$this->params = $params;
 	}
 
 }

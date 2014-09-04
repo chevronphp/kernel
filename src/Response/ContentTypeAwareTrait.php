@@ -1,6 +1,6 @@
 <?php
 
-namespace Chevron\Kernel\Response\Traits;
+namespace Chevron\Kernel\Response;
 
 trait ContentTypeAwareTrait {
 

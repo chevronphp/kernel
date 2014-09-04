@@ -16,11 +16,11 @@ class BasicController implements DispatchableInterface {
 class DispatcherTest extends \PHPUnit_Framework_TestCase {
 
 	function getTestDi(){
-		return $this->getMock("\\Chevron\\Containers\\Deferred");
+		return new \stdClass;
 	}
 
 	function getTestRoute($type){
-		$route = $this->getMock("\\Chevron\\Kernel\\Router\\Interfaces\\RouteInterface");
+		$route = $this->getMock("\\Chevron\\Kernel\\Router\\RouteInterface");
 
 		$route->method("getController")
 			  ->willReturn("DispatcherTests\\BasicController");

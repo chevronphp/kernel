@@ -1,6 +1,6 @@
 <?php
 
-namespace Chevron\Kernel\Router\Traits;
+namespace Chevron\Kernel\Router;
 
 trait DefaultActionAwareTrait {
 

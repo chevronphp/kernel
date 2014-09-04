@@ -7,7 +7,7 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class CliRouter extends AbstractRouter implements Interfaces\RouterInterface {
+class CliRouter extends AbstractRouter implements RouterInterface {
 
 	/**
 	 * public access to get a populated Route

@@ -5,11 +5,11 @@ namespace Chevron\Kernel\Response;
 /**
  *
  */
-class Headers implements Interfaces\HeadersInterface {
+class Headers implements HeadersInterface {
 
-	use Traits\StatusCodeAwareTrait;
-	use Traits\ContentTypeAwareTrait;
-	use Traits\RedirectAwareTrait;
+	use StatusCodeAwareTrait;
+	use ContentTypeAwareTrait;
+	use RedirectAwareTrait;
 
 	const HEADER_STATUS_CODE = 102;
 
