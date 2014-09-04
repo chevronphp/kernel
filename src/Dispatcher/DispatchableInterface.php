@@ -2,7 +2,6 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
-use Chevron\Containers\Interfaces\DiInterface;
 use Chevron\Kernel\Router\Interfaces\RouteInterface;
 
 /**
