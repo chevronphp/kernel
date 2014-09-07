@@ -1,45 +1,72 @@
 <?php
 
-use \Chevron\Kernel\Controller;
-use \Chevron\Kernel\Dispatcher;
-use \Chevron\Kernel\Response;
+if(!isset($argv[1])){ die("Please supply an example 'route' (e.g. index/index)\n\n"); }
+
+require "vendor/autoload.php";
+
 use \Chevron\Kernel\Router;
+use \Chevron\Kernel\Dispatcher;
+
+define("DIR_BASE", dirname(__FILE__));
+
+require DIR_BASE . "/ActionNotFoundException.php";
+require DIR_BASE . "/BaseController.php";
+require DIR_BASE . "/IndexController.php";
+require DIR_BASE . "/Di.php";
+/**
+ * load and populate our Di ... I like Chevron\Containers\Di
+ */
+$di = new Example\Di; // this would need a whole lot more to be real
 
 /**
- * This is only an example of how the KERNEL can work. Other features/components
- * are excluded.
+ * set up our dispatcher
  */
+$dispatcher = new Dispatcher\Dispatcher($di, "\\Example\\");
 
-$baseDir = dirname(__DIR__);
-$appDir  = "{$baseDir}/application";
+/**
+ * parse our request into a Route
+ */
+$route = (new Router\CliRouter)->match($argv[1]);
 
-$applicationNs = "\\ChevronWeb\\";
-$controllerNs  = "\\ChevronWeb\\Controllers\\";
+/**
+ * set up a default route for errors and empty requests ... "index"
+ */
+$default = new Router\Route("IndexController", $route->getAction());
 
-// autoloader(s) go here
-
-// $di = Di goes here
-
-$router = new Router\WebRouter;
-$route  = $router->match($_SERVER["REQUEST_URI"]);
-
-// create an object to collect headers
-// $headers = new Response\Headers;
-
-$dispatcher = new Dispatcher\Dispatcher( $di );
-
-$error = new Router\Route("ErrorController");
+/**
+ * check to see if the request is empty
+ */
+$route = $route->getController() ? $route : $default;
 
 try{
-	$controller = $dispatcher->dispatch($controllerNs, $route);
-	$method = "";
-}catch(Dispatcher\Exceptions\ControllerNotFoundException $e){
-	$controller = $dispatcher->dispatch($controllerNs, $error);
-	$method = "_404";
+	// try our requested controller -> action
+	$controller = $dispatcher->dispatch($route);
+	$view       = $controller();
+}catch(Dispatcher\ControllerNotFoundException $e){
+	// try out default controller -> 404
+	$controller = $dispatcher->dispatch($default);
+	$view       = $controller("_404");
+}catch(Example\ActionNotFoundException $e){
+	// try out default controller -> 404
+	$controller = $dispatcher->dispatch($default);
+	$view       = $controller("_404");
+}catch(Exception $e){
+	// something has gone VERY wrong
+	$controller = $dispatcher->dispatch($default);
+	$view       = $controller("_500");
 }
 
-// at some point you might want to SEND headers, but only if you want to
-// $headers->eachHeader("header");
+/**
+ * send our headers
+ */
+// this example $di returns nothing ...
+// $di->get("response")->eachHeader("header");
 
-// exec the controller -- returns a *callable* ... most likely a view (maybe a closure)
-$controller($method);
+// if you have a layout (Chevron\Widgets\Layout) you can set the view here as well
+
+$view();
+
+/**
+ * exit?
+ */
+exit(0);
