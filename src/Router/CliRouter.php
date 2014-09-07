@@ -16,7 +16,7 @@ class CliRouter extends AbstractRouter implements RouterInterface {
 	 * @return Route
 	 */
 	function match($path, array $params = []){
-		list($controller, $action, $format, $query) = $this->parseRequest($path);
+		list($controller, $action, , ) = $this->parseRequest($path);
 		// $format and $query are ignored in the CLI
 		return new Route($controller, $action, null, $params);
 	}
