@@ -12,7 +12,7 @@ trait RedirectAwareTrait {
 	 */
 	public function setRedirect( $url, $statusCode = 302 ) {
 		if( intval($statusCode / 100) != 3 ) {
-			throw new \Exception("{$statusCode} is not a valid redirect");
+			throw new ResponseException("{$statusCode} is not a valid redirect");
 		}
 
 		$this->setStatusCode($statusCode);

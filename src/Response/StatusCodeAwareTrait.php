@@ -73,7 +73,7 @@ trait StatusCodeAwareTrait {
 	public function setStatusCode( $statusCode ) {
 
 		if( !isset($this->status_codes[$statusCode]) ) {
-			throw new \Exception("Unknown Status Code {$statusCode}", $statusCode);
+			throw new ResponseException("Unknown Status Code {$statusCode}", $statusCode);
 		}
 
 		$header = "HTTP/1.1 {$statusCode} " . $this->status_codes[$statusCode];
