@@ -37,10 +37,10 @@ class IndexController extends BaseController {
 	}
 
 	/**
-	 * handle the 404 error
+	 * handle the 500 error
 	 */
 	function _500(){
-		$this->setErrorHeaders(404);
+		$this->setErrorHeaders(500);
 		return function(){
 			echo "OH NOES!! Something very wrong is happening.\n\n";
 		};
