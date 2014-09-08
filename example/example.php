@@ -30,6 +30,9 @@ $route = (new Router\CliRouter)->match($argv[1]);
 
 /**
  * set up a default route for errors and empty requests ... "index"
+ * explicitly defining the defaul controller, allows us to avoid
+ * nesting try/catches around trying to invoke th econtroller
+ *
  */
 $default = new Router\Route("IndexController", $route->getAction());
 
