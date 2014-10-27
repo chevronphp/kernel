@@ -51,13 +51,13 @@ class Dispatcher {
 		$fqnsc .= trim($route->getController(), "\\");
 
 		if(!class_exists($fqnsc)){
-			throw new ControllerNotFoundException;
+			throw new ControllerNotFoundException("Requested: {$fqnsc}");
 		}
 
 		$instance = new \ReflectionClass($fqnsc);
 
 		if(!$instance->implementsInterface(__NAMESPACE__ . "\\DispatchableInterface")){
-			throw new NonDispatchableObjectException;
+			throw new NonDispatchableObjectException("Requested: {$fqnsc}");
 		}
 
 		$object = $instance->newInstance($this->di, $route);
