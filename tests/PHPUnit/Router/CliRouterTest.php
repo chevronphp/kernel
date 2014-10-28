@@ -2,7 +2,7 @@
 
 use Chevron\Kernel\Router;
 
-class TestLog extends \Psr\Log\AbstractLogger {
+class CliTestLog extends \Psr\Log\AbstractLogger {
 	protected $container;
 	function log($level, $message, array $context = []){
 		$this->container = "{$level}|{$message}|" . count($context);
@@ -40,14 +40,14 @@ class CliRouterTest extends PHPUnit_Framework_TestCase {
 		$_argv = ["frontControl", "name/space/class/method", "-f", "--val", "asdf"];
 
 		$router = new Router\CliRouter;
-		$logger = new TestLog;
+		$logger = new CliTestLog;
 
 		$router->setLogger($logger);
 
 		$path = $_argv[1];
 		$result = $router->match($path, array_slice($_argv, 2));
 
-		$expected = "info|Chevron\\Kernel\\Router\\AbstractRouter|7";
+		$expected = "info|Chevron\\Kernel\\Router\\CliRouter|7";
 
 		$this->assertEquals($expected, $logger->getLog());
 

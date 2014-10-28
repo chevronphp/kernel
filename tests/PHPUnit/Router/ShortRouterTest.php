@@ -2,6 +2,16 @@
 
 use Chevron\Kernel\Router;
 
+class ShortTestLog extends \Psr\Log\AbstractLogger {
+	protected $container;
+	function log($level, $message, array $context = []){
+		$this->container = "{$level}|{$message}|" . count($context);
+	}
+	function getLog(){
+		return $this->container;
+	}
+}
+
 class ShortRouterTest extends PHPUnit_Framework_TestCase {
 
 	function test_match_1(){
@@ -72,6 +82,34 @@ class ShortRouterTest extends PHPUnit_Framework_TestCase {
 		$expected = "Action";
 
 		$this->assertEquals($expected, $Obj->prop);
+
+	}
+
+	function test_log_match(){
+
+		$path = "/namespace2/action.html";
+
+		$router = new Router\ShortRouter;
+
+		$logger = new ShortTestLog;
+
+		$router->setLogger($logger);
+
+		$Obj = new stdClass;
+
+		$router->regex("/namespace2\/(?P<act>.*?)\.html\$/i", function($matches)use($Obj){
+			$Obj->prop = ucwords($matches["act"]);
+		});
+
+		$router->regex("/namespace2\/(?P<act>.*)\$/i", function($matches)use($Obj){
+			$Obj->prop = strtr($matches["act"], ".", "-");
+		});
+
+		$router->match($path);
+
+		$expected = "info|Chevron\\Kernel\\Router\\ShortRouter|3";
+
+		$this->assertEquals($expected, $logger->getLog());
 
 	}
 

@@ -75,7 +75,7 @@ abstract class AbstractRouter {
 
 	protected function logRequest(array $context = []){
 		if($this->logger InstanceOf Log\LoggerInterface){
-			$this->logger->info(__CLASS__, $context);
+			$this->logger->info(get_class($this), $context);
 		}
 	}
 

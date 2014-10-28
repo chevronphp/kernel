@@ -28,6 +28,13 @@ class ShortRouter extends AbstractRouter implements RouterInterface {
 		foreach($this->patterns as $regex => $controller){
 			$matches = [];
 			if( preg_match($regex, $path, $matches) ){
+
+				$this->logRequest([
+					"request.pattern" => $regex,
+					"request.path"    => $path,
+					"pattern.matches" => $matches,
+				]);
+
 				return call_user_func($controller, $matches);
 			}
 		}
