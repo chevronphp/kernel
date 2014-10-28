@@ -3,11 +3,14 @@
 namespace Chevron\Kernel\Dispatcher;
 
 use Chevron\Kernel\Router\RouteInterface;
+use Psr\Log;
 /**
  * our dispatcher is very simple
  * @package Chevron\Kernel
  */
 class Dispatcher {
+
+	use Log\LoggerAwareTrait;
 
 	/**
 	 * hold our Di
@@ -51,13 +54,13 @@ class Dispatcher {
 		$fqnsc .= trim($route->getController(), "\\");
 
 		if(!class_exists($fqnsc)){
-			throw new ControllerNotFoundException("Requested: {$fqnsc}");
+			$this->logException(new ControllerNotFoundException("Requested: {$fqnsc}"), $route);
 		}
 
 		$instance = new \ReflectionClass($fqnsc);
 
 		if(!$instance->implementsInterface(__NAMESPACE__ . "\\DispatchableInterface")){
-			throw new NonDispatchableObjectException("Requested: {$fqnsc}");
+			$this->logException(new NonDispatchableObjectException("Requested: {$fqnsc}"), $route);
 		}
 
 		$object = $instance->newInstance($this->di, $route);
@@ -73,5 +76,22 @@ class Dispatcher {
 			return call_user_func($object);
 		};
 
+	}
+
+	protected function logException(DispatcherException $e, RouteInterface $route){
+		if($this->logger InstanceOf Log\LoggerInterface){
+			$this->logger->error(get_class($e), [
+				"e.type"           => get_class($e),
+				"e.message"        => $e->getMessage(),
+				"e.code"           => $e->getCode(),
+				"e.file"           => $e->getFile(),
+				"e.line"           => $e->getLine(),
+				"route.controller" => $route->getController(),
+				"route.action"     => $route->getAction(),
+				"route.format"     => $route->getFormat(),
+				"route.params"     => $route->getParams(),
+			]);
+		}
+		throw $e;
 	}
 }

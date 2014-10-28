@@ -13,6 +13,16 @@ class BasicController implements DispatchableInterface {
 	function getCalled(){ return $this->called; }
 }
 
+class TestLog extends \Psr\Log\AbstractLogger {
+	protected $container;
+	function log($level, $message, array $context = []){
+		$this->container = "{$level}|{$message}|" . count($context);
+	}
+	function getLog(){
+		return $this->container;
+	}
+}
+
 class DispatcherTest extends \PHPUnit_Framework_TestCase {
 
 	function getTestDi(){
@@ -66,6 +76,26 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$dispatcher->setNamespace("Chervo\\");
 
 		$controller = $dispatcher->dispatch($route);
+
+	}
+
+	function test_ControllerNotFoundExceptionLogging(){
+
+		$di    = $this->getTestDi();
+		$route = $this->getTestRoute("BasicController");
+
+		$logger = new TestLog;
+
+		$dispatcher = new Dispatcher($di);
+		$dispatcher->setLogger($logger);
+		$dispatcher->setNamespace("Chervo\\");
+
+		try{
+			$controller = $dispatcher->dispatch($route);
+		}catch(\Exception $e){
+			$expected = "error|Chevron\\Kernel\\Dispatcher\\ControllerNotFoundException|9";
+			$this->assertEquals($expected, $logger->getLog());
+		}
 
 	}
 
