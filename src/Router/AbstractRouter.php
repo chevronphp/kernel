@@ -66,8 +66,8 @@ abstract class AbstractRouter {
 			"request.method"     => $method,
 			"request.format"     => $format,
 			"request.query"      => $query,
-			"default.action."    => $this->default_action,
-			"default.format."    => $this->default_format,
+			"default.action"     => $this->default_action,
+			"default.format"     => $this->default_format,
 		]);
 
 		return [$controller, $method, $format, $query];
