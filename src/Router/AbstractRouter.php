@@ -1,6 +1,7 @@
 <?php
 
 namespace Chevron\Kernel\Router;
+use Psr\Log;
 /**
  * A very simple and quite opinionated routing system, this is here ONLY to tweak
  * inheritence later on if I get the urge.
@@ -12,6 +13,8 @@ abstract class AbstractRouter {
 
 	use DefaultActionAwareTrait;
 	use DefaultFormatAwareTrait;
+
+	use Log\LoggerAwareTrait;
 
 	/**
 	 * take the $_SERVER[REQUEST_URI] and parse it into a path, a file, and an extension
@@ -57,7 +60,23 @@ abstract class AbstractRouter {
 			parse_str($url["query"], $query);
 		}
 
+		$this->logRequest([
+			"request.path"       => $path,
+			"request.controller" => $controller,
+			"request.method"     => $method,
+			"request.format"     => $format,
+			"request.query"      => $query,
+			"default.action."    => $this->default_action,
+			"default.format."    => $this->default_format,
+		]);
+
 		return [$controller, $method, $format, $query];
+	}
+
+	protected function logRequest(array $context = []){
+		if($this->logger InstanceOf Log\LoggerInterface){
+			$this->logger->info(__CLASS__, $context);
+		}
 	}
 
 }
