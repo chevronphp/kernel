@@ -58,11 +58,13 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$lambda = $dispatcher->dispatch($route);
 
 		// note the invokation -- the lambda wraps the routed object (controller)
-		// simple invokation calls __invoke on the controller
+		// simple invokation calls __invoke on the controller -- our test returns $this
+		// in the real world, __invoke should do something meaningful ...
 		$this->assertTrue($lambda() InstanceOf DispatchableInterface);
 		// since __invoke returns $this, call a method of our controller
 		$this->assertEquals($lambda()->getCalled() , 323);
 		// the lambda acts as the wrapper for our object and allows us to pass method names and args to our controller
+		$this->assertEquals($lambda("getCalled") , 323);
 		$this->assertEquals($lambda("getCalled", [4]) , 327);
 		// in a frontend controller, your wrapper would call a method (or __invoke) on our desired object and that
 		// method might in turn return a callable (perhaps a view) that is then sent somewhere else or
