@@ -10,7 +10,7 @@ class BasicController implements DispatchableInterface {
 	function __construct($di, $route){}
 	function __invoke(){ return $this; }
 	function init(){ $this->called = 323; }
-	function getCalled(){ return $this->called; }
+	function getCalled($int = 0){ return $this->called + (int)$int; }
 }
 
 class TestLog extends \Psr\Log\AbstractLogger {
@@ -55,12 +55,18 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 
 		$dispatcher = new Dispatcher($di, "Chevron\\Kernel\\");
 
-		$controller = call_user_func($dispatcher->dispatch($route));
+		$lambda = $dispatcher->dispatch($route);
 
-		// note the invokation
-		$this->assertTrue($controller InstanceOf BasicController);
-		$this->assertEquals($controller->getCalled() , 323);
-
+		// note the invokation -- the lambda wraps the routed object (controller)
+		// simple invokation calls __invoke on the controller
+		$this->assertTrue($lambda() InstanceOf DispatchableInterface);
+		// since __invoke returns $this, call a method of our controller
+		$this->assertEquals($lambda()->getCalled() , 323);
+		// the lambda acts as the wrapper for our object and allows us to pass method names and args to our controller
+		$this->assertEquals($lambda("getCalled", [4]) , 327);
+		// in a frontend controller, your wrapper would call a method (or __invoke) on our desired object and that
+		// method might in turn return a callable (perhaps a view) that is then sent somewhere else or
+		// invoked itself.
 	}
 
 

@@ -73,7 +73,7 @@ class Dispatcher {
 				$object = [$object, $method];
 			}
 
-			return call_user_func($object);
+			return call_user_func_array($object, $args);
 		};
 
 	}
