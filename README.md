@@ -40,7 +40,7 @@ or otherwise.
 
 Peruse the tests or, if present, the examples directory to see usage.
 
-See [packagist](https://packagist.org/packages/chevron/kernel) for version/installation info. At the moment, I recommend using `"chevron/kernel":"~1.0"`.
+See [packagist](https://packagist.org/packages/chevron/kernel) for version/installation info.
 
 [![Latest Stable Version](https://poser.pugx.org/chevron/kernel/v/stable.svg)](https://packagist.org/packages/chevron/kernel)
 [![Build Status](https://travis-ci.org/chevronphp/kernel.svg?branch=master)](https://travis-ci.org/chevronphp/kernel)
