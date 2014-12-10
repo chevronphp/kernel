@@ -50,4 +50,12 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+	function test_getHash(){
+		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", "action", null, ["query" => "param"]);
+		$result = $obj->getHash();
+		$expected = "namespace/controller/action?query=param";
+		$expected = substr(sha1($expected), 0, 8);
+		$this->assertEquals($expected, $result);
+	}
+
 }

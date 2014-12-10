@@ -95,6 +95,13 @@ class Route implements RouteInterface{
 	}
 
 	/**
+	 * get a unique 8 char hash of the request
+	 */
+	function getHash(){
+		return substr(sha1($this->__toString()), 0, 8);
+	}
+
+	/**
 	 * output the route as an array
 	 * @return array
 	 */
