@@ -1,6 +1,9 @@
 <?php
 
 namespace Chevron\Kernel\Dispatcher;
+
+use Chevron\Kernel\Router\RouteInterface;
+
 /**
  * the signature for our router
  *
@@ -14,6 +17,6 @@ interface DispatcherInterface {
 	 * @param string $path The path to parse
 	 * @return \Chevron\Kernel\Router\Route
 	 */
-	function dispatch($path);
+	function dispatch( RouteInterface $route );
 
 }

@@ -143,13 +143,13 @@ class FrontController {
 	 * parse our request into a Route
 	 */
 	protected function setRouter(Router\RouterInterface $router){
-		$this->router = $router
+		$this->router = $router;
 	}
 
 	/**
 	 * parse our request into a Route
 	 */
 	protected function setDi($di){
-		$this->di = $di
+		$this->di = $di;
 	}
 }

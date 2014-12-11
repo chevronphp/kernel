@@ -8,7 +8,7 @@ use Psr\Log;
  * our dispatcher is very simple
  * @package Chevron\Kernel
  */
-class Dispatcher {
+class Dispatcher implements DispatcherInterface {
 
 	use Log\LoggerAwareTrait;
 

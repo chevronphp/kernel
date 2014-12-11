@@ -8,7 +8,7 @@ use Chevron\ObjectLoader\ObjectLoader;
 use Chevron\Containers\Di;
 use Chevron\Kernel\Dispatcher\Dispatcher;
 use Chevron\Kernel\Router\CliRouter;
-use Chevron\Base\FrontController;
+use Chevron\Kernel\Controllers\FrontController;
 
 define("DIR_BASE", dirname(__FILE__));
 require dirname(DIR_BASE) . "/vendor/autoload.php";
