@@ -7,7 +7,7 @@ use Chevron\Kernel\Dispatcher;
 
 class FrontController {
 
-	protected $di, $dispatcher, $route;
+	protected $di, $dispatcher, $router;
 	protected $indexController, $errorController;
 
 	/**
@@ -62,7 +62,7 @@ class FrontController {
 	 */
 	function invoke($route){
 
-		$route = $this->router->match($route);
+		$route = $error = $this->router->match($route);
 
 		/**
 		 * set up a default route for errors and empty requests ... "index"
