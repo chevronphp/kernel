@@ -28,6 +28,20 @@ class MockErrorController extends \Chevron\Kernel\Dispatcher\AbstractDispatchabl
 	}
 }
 
+class MockNoMethodController extends \Chevron\Kernel\Dispatcher\AbstractDispatchableController {
+	function init(){} /* noop */
+}
+
+class TestLog extends \Psr\Log\AbstractLogger {
+	protected $container;
+	function log($level, $message, array $context = []){
+		$this->container = "{$level}|{$message}|" . count($context);
+	}
+	function getLog(){
+		return $this->container;
+	}
+}
+
 class FrontControllerTest extends PHPUnit_Framework_TestCase {
 
 	function getDiMock(){
@@ -163,6 +177,33 @@ class FrontControllerTest extends PHPUnit_Framework_TestCase {
 		$result = $app("/bar.html");
 
 		$this->assertEquals(500, $result);
+
+	}
+
+	function test_AbstractDispatchableController_logging(){
+
+		$di         = $this->getDiMock();
+		$dispatcher = $this->getDispatcherMock();
+		$router     = $this->getRouterMock();
+		$route      = $this->getRouteMock();
+
+		$mock = new MockNoMethodController($di, $route);
+		$logger = new TestLog;
+		$mock->setLogger($logger);
+
+		$dispatcher->method('dispatch')
+			 ->willReturn($mock);
+
+		$app = new Chevron\Kernel\Controllers\FrontController($di, $dispatcher, $router);
+		$app->setIndexController("MockIndexController");
+		$app->setErrorController("MockErrorController");
+
+		try{
+			$result = $app("/bar.html");
+		}catch(\Exception $e){
+			$expected = "error|Chevron\\Kernel\\Dispatcher\\ActionNotFoundException|10";
+			$this->assertEquals($expected, $logger->getLog());
+		}
 
 	}
 
