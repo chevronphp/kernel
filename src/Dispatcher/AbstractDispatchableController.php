@@ -1,11 +1,10 @@
 <?php
 
-namespace Chevron\Kernel\Controllers;
+namespace Chevron\Kernel\Dispatcher;
 
 use Psr\Log;
-use Chevron\Kernel\Dispatcher\DispatchableInterface;
 
-abstract class BaseController implements DispatchableInterface {
+abstract class AbstractDispatchableController implements DispatchableInterface {
 
 	use Log\LoggerAwareTrait;
 
@@ -21,7 +20,7 @@ abstract class BaseController implements DispatchableInterface {
 	function __invoke(){
 		$action = $this->route->getAction();
 		if(method_exists($this, $action)){
-			return call_user_func([$this, $action]);
+			return call_user_func_array([$this, $action], func_get_args());
 		}
 		$this->logException(new ActionNotFoundException);
 	}
@@ -43,5 +42,35 @@ abstract class BaseController implements DispatchableInterface {
 		}
 		throw $e;
 	}
+
+	/****************************
+		EXAMPLE ERROR HANDLING
+	****************************/
+
+	// protected $response;
+
+	// function init(){
+	// 	// init something fancy
+	// 	$this->response = $this->di->get("response");
+	// }
+
+	/**
+	 * handle errors
+	 *
+	 * 404 -- "404 means \"00PS\" in H@X0R.\n\n"
+	 * 500 -- "OH NOES!! Something very wrong is happening.\n\n"
+	 */
+	// function __invoke($code = 404, \Exception $e = null){
+	// 	$this->setErrorHeaders(intval($code));
+	// 	if($e){ $this->logException($e); }
+	// 	return function(){  };
+	// }
+
+	// protected function setErrorHeaders($status){
+	// 	if($this->response InstanceOf HeadersInterface){
+	// 		$response->setContentType($this->route->getFormat());
+	// 		$response->setStatusCode($status);
+	// 	}
+	// }
 
 }

@@ -82,6 +82,7 @@ class FrontController {
 			 * if not, have we set an index controller?
 			 */
 			if($this->indexController){
+
 				$route = new Router\Route($this->indexController, $route->getAction());
 			}else{
 				/**
@@ -116,7 +117,7 @@ class FrontController {
 			$controller = $this->dispatcher->dispatch($error);
 			$view       = call_user_func($controller, null, [404, $e]);
 
-		}catch(ActionNotFoundException $e){
+		}catch(Dispatcher\ActionNotFoundException $e){
 
 			$controller = $this->dispatcher->dispatch($error);
 			$view       = call_user_func($controller, null, [404, $e]);

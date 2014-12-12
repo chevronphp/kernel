@@ -1,5 +1,5 @@
 <?php
 
-namespace Chevron\Kernel\Controllers;
+namespace Chevron\Kernel\Dispatcher;
 
 class ActionNotFoundException extends \Exception {}
