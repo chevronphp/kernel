@@ -2,4 +2,4 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
-class ActionNotFoundException extends \Exception {}
+class ActionNotFoundException extends DispatcherException {}

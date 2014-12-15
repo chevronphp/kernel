@@ -71,7 +71,6 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		// invoked itself.
 	}
 
-
 	/**
 	 * @expectedException \Chevron\Kernel\Dispatcher\ControllerNotFoundException
 	 */
@@ -84,6 +83,22 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$dispatcher->setNamespace("Chervo\\");
 
 		$controller = $dispatcher->dispatch($route);
+
+	}
+
+	/**
+	 * @expectedException \Chevron\Kernel\Dispatcher\ActionNotFoundException
+	 */
+	function test_ActionNotFoundException(){
+
+		$di    = $this->getTestDi();
+		$route = $this->getTestRoute("BasicController");
+
+		$dispatcher = new Dispatcher($di, "Chevron\\Kernel\\");
+
+		$controller = $dispatcher->dispatch($route);
+
+		call_user_func($controller, "NotAMethod");
 
 	}
 

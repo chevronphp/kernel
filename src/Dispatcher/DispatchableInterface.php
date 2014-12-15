@@ -2,7 +2,7 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
-use Chevron\Kernel\Router\Interfaces\RouteInterface;
+use Chevron\Kernel\Router\RouteInterface;
 
 /**
  * our dispatcher is very simple

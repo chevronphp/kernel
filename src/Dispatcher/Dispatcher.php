@@ -65,11 +65,15 @@ class Dispatcher implements DispatcherInterface {
 
 		$obj = $instance->newInstance($this->di, $route);
 
-		return function($method = "", array $args = []) use ($obj){
+		$that = $this;
+		return function($method = "", array $args = []) use ($obj, $that, $route){
 
 			call_user_func([$obj, "init"]);
 
 			if($method){
+				if(!method_exists($obj, $method)){
+					$this->logException(new ActionNotFoundException(sprintf("Request: %s::%s", get_class($obj), $method)), $route);
+				}
 				$obj = [$obj, $method];
 			}
 
@@ -78,7 +82,7 @@ class Dispatcher implements DispatcherInterface {
 
 	}
 
-	protected function logException(DispatcherException $e, RouteInterface $route){
+	protected function logException(DispatcherException $e, RouteInterface $route = null){
 		if($this->logger InstanceOf Log\LoggerInterface){
 			$this->logger->error(get_class($e), [
 				"e.type"           => get_class($e),

@@ -3,6 +3,7 @@
 namespace Chevron\Kernel\Dispatcher;
 
 use Psr\Log;
+use Chevron\Kernel\Router\RouteInterface;
 
 abstract class AbstractDispatchableController implements DispatchableInterface {
 
