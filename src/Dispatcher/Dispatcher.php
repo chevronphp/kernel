@@ -82,7 +82,7 @@ class Dispatcher implements DispatcherInterface {
 
 	}
 
-	protected function logException(DispatcherException $e, RouteInterface $route = null){
+	protected function logException(DispatcherException $e, RouteInterface $route){
 		if($this->logger InstanceOf Log\LoggerInterface){
 			$this->logger->error(get_class($e), [
 				"e.type"           => get_class($e),
