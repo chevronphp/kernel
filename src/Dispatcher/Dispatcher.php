@@ -63,17 +63,17 @@ class Dispatcher implements DispatcherInterface {
 			$this->logException(new NonDispatchableObjectException("Requested: {$fqnsc}"), $route);
 		}
 
-		$object = $instance->newInstance($this->di, $route);
+		$obj = $instance->newInstance($this->di, $route);
 
-		return function($method = "", array $args = []) use ($object){
+		return function($method = "", array $args = []) use ($obj){
 
-			call_user_func([$object, "init"]);
+			call_user_func([$obj, "init"]);
 
 			if($method){
-				$object = [$object, $method];
+				$obj = [$obj, $method];
 			}
 
-			return call_user_func_array($object, $args);
+			return call_user_func_array($obj, $args);
 		};
 
 	}

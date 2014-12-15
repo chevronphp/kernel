@@ -15,7 +15,7 @@ interface DispatcherInterface {
 	/**
 	 * get a Route based on the given $path
 	 * @param string $path The path to parse
-	 * @return \Chevron\Kernel\Router\Route
+	 * @return \Closure
 	 */
 	function dispatch( RouteInterface $route );
 
