@@ -30,4 +30,16 @@ interface DispatchableInterface {
 	 */
 	function __invoke();
 
+	/**
+	 * a non-property way of getting Di
+	 * @return DiInterface
+	 */
+	function getDi();
+
+	/**
+	 * a non-property way of getting the current route
+	 * @return RouteInterface
+	 */
+	function getRoute();
+
 }

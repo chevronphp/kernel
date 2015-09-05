@@ -18,6 +18,14 @@ abstract class AbstractDispatchableController implements DispatchableInterface {
 
 	abstract function init();
 
+	function getDi(){
+		return $this->di;
+	}
+
+	function getRoute(){
+		return $this->route;
+	}
+
 	function __invoke(){
 		$action = $this->route->getAction();
 		if(method_exists($this, $action)){

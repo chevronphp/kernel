@@ -11,6 +11,8 @@ class BasicController implements DispatchableInterface {
 	function __invoke(){ return $this; }
 	function init(){ $this->called = 323; }
 	function getCalled($int = 0){ return $this->called + (int)$int; }
+	function getDi(){ return $this->di; }
+	function getRoute(){ return $this->route; }
 }
 
 class TestLog extends \Psr\Log\AbstractLogger {
