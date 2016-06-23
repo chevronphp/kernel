@@ -4,33 +4,33 @@ namespace Chevron\Kernel\Dispatcher;
 
 use Psr\Log;
 use Chevron\Kernel\Router\RouteInterface;
+use Chevron\Kernel\Traits\DiAwareTrait;
+use Chevron\Kernel\Traits\RouteAwareTrait;
+use Chevron\Kernel\Traits\InjectableMethodParamsInvocationTrait;
+use Chevron\Kernel\Traits\RedirectableControllerTrait;
 
 abstract class AbstractDispatchableController implements DispatchableInterface {
 
 	use Log\LoggerAwareTrait;
-
-	protected $di, $route;
+	use InjectableMethodParamsInvocationTrait;
+	use RedirectableControllerTrait;
+	use DiAwareTrait;
+	use RouteAwareTrait;
 
 	function __construct( $di, $route ){
-		$this->di    = $di;
-		$this->route = $route;
+		$this->setDi($di);
+		$this->setRoute($route);
 	}
 
 	abstract function init();
 
-	function getDi(){
-		return $this->di;
-	}
-
-	function getRoute(){
-		return $this->route;
-	}
-
 	function __invoke(){
-		$action = $this->route->getAction();
+		$action = $this->getRoute()->getAction();
+
 		if(method_exists($this, $action)){
-			return call_user_func_array([$this, $action], func_get_args());
+			return $this->callMethodFromReflectiveDiMethodParams($this->getDi(), $this, $action, func_get_args());
 		}
+
 		$this->logException(new ActionNotFoundException);
 	}
 
@@ -42,44 +42,14 @@ abstract class AbstractDispatchableController implements DispatchableInterface {
 				"e.code"           => $e->getCode(),
 				"e.file"           => $e->getFile(),
 				"e.line"           => $e->getLine(),
-				"route.controller" => $this->route->getController(),
-				"route.action"     => $this->route->getAction(),
-				"route.format"     => $this->route->getFormat(),
-				"route.params"     => $this->route->getParams(),
+				"route.controller" => $this->getRoute()->getController(),
+				"route.action"     => $this->getRoute()->getAction(),
+				"route.format"     => $this->getRoute()->getFormat(),
+				"route.params"     => $this->getRoute()->getParams(),
 				"info.class"       => get_class($this),
 			]);
 		}
 		throw $e;
 	}
-
-	/****************************
-		EXAMPLE ERROR HANDLING
-	****************************/
-
-	// protected $response;
-
-	// function init(){
-	// 	// init something fancy
-	// 	$this->response = $this->di->get("response");
-	// }
-
-	/**
-	 * handle errors
-	 *
-	 * 404 -- "404 means \"00PS\" in H@X0R.\n\n"
-	 * 500 -- "OH NOES!! Something very wrong is happening.\n\n"
-	 */
-	// function __invoke($code = 404, \Exception $e = null){
-	// 	$this->setErrorHeaders(intval($code));
-	// 	if($e){ $this->logException($e); }
-	// 	return function(){  };
-	// }
-
-	// protected function setErrorHeaders($status){
-	// 	if($this->response InstanceOf HeadersInterface){
-	// 		$response->setContentType($this->route->getFormat());
-	// 		$response->setStatusCode($status);
-	// 	}
-	// }
 
 }

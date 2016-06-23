@@ -9,11 +9,13 @@ namespace Chevron\Kernel\Router;
  */
 class Route implements RouteInterface{
 
-	const CONTROLLER_KEY = "controller";
+	const DEFAULT_CONTROLLER = "index";
 
-	const ACTION_KEY     = "action";
+	const CONTROLLER_KEY     = "controller";
 
-	const FORMAT_KEY     = "format";
+	const ACTION_KEY         = "action";
+
+	const FORMAT_KEY         = "format";
 
 	/**
 	 * the value to return as the requested controller.
@@ -46,7 +48,7 @@ class Route implements RouteInterface{
 	 * @return \Chevron\Router\Route
 	 */
 	function __construct($controller, $action = null, $format = null, array $params = []){
-		$this->controller = $controller;
+		$this->controller = $controller ?: self::DEFAULT_CONTROLLER;
 
 		if($action){
 			$this->setAction($action);
