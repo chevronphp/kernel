@@ -2,15 +2,15 @@
 
 namespace Chevron\Kernel\Dispatcher;
 
-use Chevron\Kernel\Router\RouteInterface;
-use Psr\Log;
+use Chevron\Kernel\Router\Interfaces\RouteInterface;
+use Chevron\Kernel\Dispatcher\Interfaces\DispatchableInterface;
+use Chevron\Kernel\Dispatcher\Interfaces\DispatchableInitializationInterface;
 /**
  * our dispatcher is very simple
  * @package Chevron\Kernel
  */
-class Dispatcher implements DispatcherInterface {
+class Dispatcher implements Interfaces\DispatcherInterface {
 
-	use Log\LoggerAwareTrait;
 
 	/**
 	 * hold our Di
@@ -25,7 +25,7 @@ class Dispatcher implements DispatcherInterface {
 	/**
 	 * set our Di
 	 */
-	function __construct( $di, $namespace = null ){
+	public function __construct( $di, $namespace = null ){
 		$this->di = $di;
 		$this->namespace = $namespace;
 	}
@@ -35,7 +35,7 @@ class Dispatcher implements DispatcherInterface {
 	 * @param string $namespace The namespace
 	 * @return void
 	 */
-	function setNamespace($namespace){
+	public function setNamespace($namespace){
 		$this->namespace = $namespace;
 	}
 
@@ -44,7 +44,7 @@ class Dispatcher implements DispatcherInterface {
 	 * method name is passed at call time, it supercedes __invoke()
 	 * @return \Closure
 	 */
-	function dispatch( RouteInterface $route ){
+	public function dispatch( RouteInterface $route ){
 
 		$fqnsc = "\\";
 		if($this->namespace){
@@ -54,25 +54,31 @@ class Dispatcher implements DispatcherInterface {
 		$fqnsc .= trim($route->getController(), "\\");
 
 		if(!class_exists($fqnsc)){
-			$this->logException(new ControllerNotFoundException("Requested: {$fqnsc}"), $route);
+			throw new \DomainException("Class not found: {$fqnsc}; via {$route}", 500);
 		}
 
 		$instance = new \ReflectionClass($fqnsc);
 
-		if(!$instance->implementsInterface(__NAMESPACE__ . "\\DispatchableInterface")){
-			$this->logException(new NonDispatchableObjectException("Requested: {$fqnsc}"), $route);
+		if(!$instance->implementsInterface(DispatchableInterface::class)){
+			throw new \DomainException("Class missing interface: {$fqnsc}; via {$route}", 500);
 		}
 
-		$obj = $instance->newInstance($this->di, $route);
+		$shouldInit = false;
+		if($instance->implementsInterface(DispatchableInitializationInterface::class)){
+			$shouldInit = true;
+		}
 
-		$that = $this;
-		return function($method = "", array $args = []) use ($obj, $that, $route){
+		$obj = $instance->newInstanceArgs([$this->di, $route]);
 
-			call_user_func([$obj, "init"]);
+		return function($method = "", array $args = []) use ($obj, $route, $shouldInit){
+
+			if($shouldInit){
+				call_user_func_array([$obj, DispatchableInitializationInterface::INIT], [$method]);
+			}
 
 			if($method){
 				if(!method_exists($obj, $method)){
-					$this->logException(new ActionNotFoundException(sprintf("Request: %s::%s", get_class($obj), $method)), $route);
+					throw new \InvalidArgumentException("Method '{$method}' not found on ".get_class($obj)."; via {$route}", 404);
 				}
 				$obj = [$obj, $method];
 			}
@@ -80,22 +86,5 @@ class Dispatcher implements DispatcherInterface {
 			return call_user_func_array($obj, $args);
 		};
 
-	}
-
-	protected function logException(DispatcherException $e, RouteInterface $route){
-		if($this->logger InstanceOf Log\LoggerInterface){
-			$this->logger->error(get_class($e), [
-				"e.type"           => get_class($e),
-				"e.message"        => $e->getMessage(),
-				"e.code"           => $e->getCode(),
-				"e.file"           => $e->getFile(),
-				"e.line"           => $e->getLine(),
-				"route.controller" => $route->getController(),
-				"route.action"     => $route->getAction(),
-				"route.format"     => $route->getFormat(),
-				"route.params"     => $route->getParams(),
-			]);
-		}
-		throw $e;
 	}
 }

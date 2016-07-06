@@ -3,26 +3,17 @@
 namespace Chevron\Kernel\DispatcherTests;
 
 use \Chevron\Kernel\Dispatcher\Dispatcher;
-use \Chevron\Kernel\Dispatcher\DispatchableInterface;
+use \Chevron\Kernel\Dispatcher\Interfaces\DispatchableInterface;
+use \Chevron\Kernel\Dispatcher\Interfaces\DispatchableInitializationInterface;
 
-class BasicController implements DispatchableInterface {
+class BasicController implements DispatchableInterface, DispatchableInitializationInterface {
 	protected $called;
 	function __construct($di, $route){}
 	function __invoke(){ return $this; }
-	function init(){ $this->called = 323; }
+	function init($action = ""){ $this->called = 323; }
 	function getCalled($int = 0){ return $this->called + (int)$int; }
 	function getDi(){ return $this->di; }
 	function getRoute(){ return $this->route; }
-}
-
-class TestLog extends \Psr\Log\AbstractLogger {
-	protected $container;
-	function log($level, $message, array $context = []){
-		$this->container = "{$level}|{$message}|" . count($context);
-	}
-	function getLog(){
-		return $this->container;
-	}
 }
 
 class DispatcherTest extends \PHPUnit_Framework_TestCase {
@@ -32,7 +23,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	function getTestRoute($type){
-		$route = $this->getMock("\\Chevron\\Kernel\\Router\\RouteInterface");
+		$route = $this->getMock("\\Chevron\\Kernel\\Router\\Interfaces\\RouteInterface");
 
 		$route->method("getController")
 			  ->willReturn("DispatcherTests\\BasicController");
@@ -74,7 +65,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException \Chevron\Kernel\Dispatcher\ControllerNotFoundException
+	 * @expectedException \DomainException
 	 */
 	function test_ControllerNotFoundException(){
 
@@ -89,7 +80,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException \Chevron\Kernel\Dispatcher\ActionNotFoundException
+	 * @expectedException \InvalidArgumentException
 	 */
 	function test_ActionNotFoundException(){
 
@@ -101,26 +92,6 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase {
 		$controller = $dispatcher->dispatch($route);
 
 		call_user_func($controller, "NotAMethod");
-
-	}
-
-	function test_ControllerNotFoundExceptionLogging(){
-
-		$di    = $this->getTestDi();
-		$route = $this->getTestRoute("BasicController");
-
-		$logger = new TestLog;
-
-		$dispatcher = new Dispatcher($di);
-		$dispatcher->setLogger($logger);
-		$dispatcher->setNamespace("Chervo\\");
-
-		try{
-			$controller = $dispatcher->dispatch($route);
-		}catch(\Exception $e){
-			$expected = "error|Chevron\\Kernel\\Dispatcher\\ControllerNotFoundException|9";
-			$this->assertEquals($expected, $logger->getLog());
-		}
 
 	}
 

@@ -7,7 +7,7 @@ namespace Chevron\Kernel\Router;
  * @package Chevron\Kernel
  * @author Jon Henderson
  */
-class Route implements RouteInterface{
+class Route implements Interfaces\RouteInterface{
 
 	const DEFAULT_CONTROLLER = "index";
 
