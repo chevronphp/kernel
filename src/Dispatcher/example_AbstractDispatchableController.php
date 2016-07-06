@@ -4,7 +4,7 @@ namespace Chevron\Kernel\Dispatcher;
 
 use Chevron\Kernel\Dispatcher\Traits\DiAwareTrait;
 use Chevron\Kernel\Dispatcher\Traits\RouteAwareTrait;
-use Chevron\Kernel\Dispatcher\Traits\InjectableMethodParamsInvocationTrait;
+use Chevron\Containers\Traits\ReflectiveDiMethodParamsTrait;
 use Chevron\Kernel\Response\Traits\RedirectableControllerTrait;
 
 abstract class AbstractDispatchableController implements Interfaces\DispatchableInterface {

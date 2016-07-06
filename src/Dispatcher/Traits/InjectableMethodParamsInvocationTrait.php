@@ -2,7 +2,7 @@
 
 namespace Chevron\Kernel\Dispatcher\Traits;
 
-trait InjectableMethodParamsInvocationTrait {
+trait ReflectiveDiMethodParamsTrait {
 
 	/**
 	 * @param DiInterface       $di
@@ -19,6 +19,7 @@ trait InjectableMethodParamsInvocationTrait {
 		}
 		return $arguments;
 	}
+
 	/**
 	 * @param DiInterface $di
 	 * @param string      $className
@@ -34,6 +35,7 @@ trait InjectableMethodParamsInvocationTrait {
 		}
 		return new $className;
 	}
+
 	/**
 	 * @param DiInterface $di
 	 * @param object      $class
