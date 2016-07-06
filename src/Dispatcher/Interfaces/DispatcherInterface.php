@@ -17,6 +17,6 @@ interface DispatcherInterface {
 	 * @param string $path The path to parse
 	 * @return \Closure
 	 */
-	function dispatch( RouteInterface $route );
+	public function dispatch( RouteInterface $route );
 
 }

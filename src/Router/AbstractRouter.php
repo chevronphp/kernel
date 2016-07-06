@@ -18,7 +18,7 @@ abstract class AbstractRouter {
 	/**
 	 * set the default action
 	 */
-	function setDefaultAction($action){
+	public function setDefaultAction($action){
 		$this->default_action = $action;
 	}
 
@@ -30,7 +30,7 @@ abstract class AbstractRouter {
 	/**
 	 * set the default format
 	 */
-	function setDefaultFormat($format){
+	public function setDefaultFormat($format){
 		$this->default_format = $format;
 	}
 

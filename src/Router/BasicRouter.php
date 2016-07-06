@@ -29,7 +29,7 @@ class BasicRouter extends AbstractRouter implements Interfaces\RouterInterface {
 	 * @param string $path A string representing the path to be parsed -- $_SERVER[REQUEST_URI]
 	 * @return Route
 	 */
-	function match($path){
+	public function match($path){
 		list($controller, $action, $format, $parameters) = $this->parseRequest($path);
 		return new Route($controller, $action, $format, $parameters);
 	}

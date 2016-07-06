@@ -32,6 +32,6 @@ trait ContentTypeAwareTrait {
 	 * @param string $k
 	 * @param string $v
 	 */
-	abstract function setHeader($k, $v);
+	public abstract function setHeader($k, $v);
 
 }

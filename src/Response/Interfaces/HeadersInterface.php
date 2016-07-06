@@ -11,7 +11,7 @@ interface HeadersInterface {
 	/**
 	 * @return array
 	 */
-	function getHeaders();
+	public function getHeaders();
 
 	/**
 	 * @todo array values, separated with semicolons and comas dependent on their depth
@@ -20,7 +20,7 @@ interface HeadersInterface {
 	 * @param string $value
 	 * @return string The Composed Header
 	 */
-	function setHeader( $key, $value );
+	public function setHeader( $key, $value );
 
 	/**
 	 * Method to generate the correct content-type header for the response
@@ -28,7 +28,7 @@ interface HeadersInterface {
 	 * @param string $extension The type to retrieve
 	 * @return string
 	 */
-	function setContentType( $extension );
+	public function setContentType( $extension );
 
 	/**
 	 * @param string $url
@@ -36,7 +36,7 @@ interface HeadersInterface {
 	 * @return void
 	 * @throws \Exception
 	 */
-	function setRedirect( $url, $statusCode = 302 );
+	public function setRedirect( $url, $statusCode = 302 );
 
 	/**
 	 * method to to generate the correct HTTP header for the response
@@ -45,13 +45,13 @@ interface HeadersInterface {
 	 * @return string
 	 * @throws \Exception
 	 */
-	function setStatusCode( $statusCode );
+	public function setStatusCode( $statusCode );
 
 	/**
 	 * @param callable $callback
 	 * @param bool     $extra
 	 * @return void
 	 */
-	function eachHeader( callable $callback, $extra = false );
+	public function eachHeader( callable $callback, $extra = false );
 
 }

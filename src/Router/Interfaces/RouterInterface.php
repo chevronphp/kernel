@@ -14,6 +14,6 @@ interface RouterInterface {
 	 * @param string $path The path to parse
 	 * @return \Chevron\Kernel\Router\Route
 	 */
-	function match($path);
+	public function match($path);
 
 }

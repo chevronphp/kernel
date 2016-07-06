@@ -14,12 +14,12 @@ abstract class AbstractDispatchableController implements Interfaces\Dispatchable
 	use DiAwareTrait;
 	use RouteAwareTrait;
 
-	function __construct( $di, $route ){
+	public function __construct( $di, $route ){
 		$this->setDi($di);
 		$this->setRoute($route);
 	}
 
-	function __invoke(){
+	public function __invoke(){
 		$action = $this->getRoute()->getAction();
 
 		if(method_exists($this, $action)){

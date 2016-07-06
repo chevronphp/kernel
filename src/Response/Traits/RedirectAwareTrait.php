@@ -23,11 +23,11 @@ trait RedirectAwareTrait {
 	 * @param string $k
 	 * @param string $v
 	 */
-	abstract function setHeader($k, $v);
+	public abstract function setHeader($k, $v);
 
 	/**
 	 * @param string $v
 	 */
-	abstract function setStatusCode($v);
+	public abstract function setStatusCode($v);
 
 }

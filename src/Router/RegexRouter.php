@@ -22,7 +22,7 @@ class RegexRouter extends AbstractRouter implements Interfaces\RouterInterface {
 	 * @param string $path A string representing the path to be parsed -- $_SERVER[REQUEST_URI]
 	 * @return mixed
 	 */
-	function match($path){
+	public function match($path){
 		if(!$this->patterns){ return null; }
 
 		foreach($this->patterns as $regex => $controller){
@@ -39,7 +39,7 @@ class RegexRouter extends AbstractRouter implements Interfaces\RouterInterface {
 	 * @param callable $func The callable 'controller'
 	 * @return void
 	 */
-	function regex($pattern, callable $func){
+	public function regex($pattern, callable $func){
 		$this->patterns[$pattern] = $func;
 	}
 

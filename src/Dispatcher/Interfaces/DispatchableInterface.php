@@ -16,12 +16,12 @@ interface DispatchableInterface {
 	 * @param RouteInterface $route The Route
 	 * @return void
 	 */
-	function __construct( $di, $route );
+	public function __construct( $di, $route );
 
 	/**
 	 * make our object dispatchable
 	 * @return mixed
 	 */
-	function __invoke();
+	public function __invoke();
 
 }

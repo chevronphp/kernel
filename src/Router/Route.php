@@ -47,7 +47,7 @@ class Route implements Interfaces\RouteInterface{
 	 * @param array array $params an array of the parsed query string
 	 * @return \Chevron\Router\Route
 	 */
-	function __construct($controller, $action = null, $format = null, array $params = []){
+	public function __construct($controller, $action = null, $format = null, array $params = []){
 		$this->controller = $controller ?: self::DEFAULT_CONTROLLER;
 
 		if($action){
@@ -68,7 +68,7 @@ class Route implements Interfaces\RouteInterface{
 	 * get the controller
 	 * @return string
 	 */
-	function getController(){
+	public function getController(){
 		return $this->controller;
 	}
 
@@ -76,7 +76,7 @@ class Route implements Interfaces\RouteInterface{
 	 * get the action
 	 * @return string
 	 */
-	function getAction(){
+	public function getAction(){
 		return $this->action;
 	}
 
@@ -84,7 +84,7 @@ class Route implements Interfaces\RouteInterface{
 	 * get the format
 	 * @return string
 	 */
-	function getFormat(){
+	public function getFormat(){
 		return $this->format;
 	}
 
@@ -92,14 +92,14 @@ class Route implements Interfaces\RouteInterface{
 	 * get the params
 	 * @return array
 	 */
-	function getParams(){
+	public function getParams(){
 		return $this->params;
 	}
 
 	/**
 	 * get a unique 8 char hash of the request
 	 */
-	function getHash(){
+	public function getHash(){
 		return substr(sha1($this->__toString()), 0, 8);
 	}
 
@@ -107,7 +107,7 @@ class Route implements Interfaces\RouteInterface{
 	 * output the route as an array
 	 * @return array
 	 */
-	function toArray(){
+	public function toArray(){
 		return [
 			static::CONTROLLER_KEY => $this->getController(),
 			static::ACTION_KEY     => $this->getAction(),
@@ -118,7 +118,7 @@ class Route implements Interfaces\RouteInterface{
 	/**
 	 * create a link looking string from the properties of the route
 	 */
-	function __toString(){
+	public function __toString(){
 
 		$route = strtolower(strtr(trim($this->getController(), DIRECTORY_SEPARATOR), "\\", "/")) . "/";
 
@@ -142,7 +142,7 @@ class Route implements Interfaces\RouteInterface{
 	 * chance that you're dispatching from a specific namespace
 	 * @param string $namespace The prefix for the link
 	 */
-	function link($namespace = ""){
+	public function link($namespace = ""){
 		$prefix = "";
 		if($namespace){
 			$prefix = strtolower(trim($namespace, "\\/"));
@@ -156,7 +156,7 @@ class Route implements Interfaces\RouteInterface{
 	 * @param string $action
 	 * @return string
 	 */
-	function setAction($action){
+	public function setAction($action){
 		$this->action = $action;
 	}
 
@@ -165,7 +165,7 @@ class Route implements Interfaces\RouteInterface{
 	 * @param string $format
 	 * @return string
 	 */
-	function setFormat($format){
+	public function setFormat($format){
 		$this->format = $format;
 	}
 
@@ -174,7 +174,7 @@ class Route implements Interfaces\RouteInterface{
 	 * @param array $params
 	 * @return array
 	 */
-	function setParams(array $params){
+	public function setParams(array $params){
 		$this->params = $params;
 	}
 
