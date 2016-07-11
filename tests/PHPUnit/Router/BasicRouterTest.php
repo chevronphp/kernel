@@ -130,4 +130,20 @@ class BasicRouterTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	function test_generate(){
+
+		$router = new Router\BasicRouter("\\Name\\Space");
+
+		$expected = "/class/method.html";
+
+		$result = $router->generate("Name\\Space\\Class",
+			"method",
+			"html",
+			[]
+		);
+
+		$this->assertEquals($expected, $result);
+
+	}
+
 }

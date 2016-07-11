@@ -54,13 +54,13 @@ class Dispatcher implements Interfaces\DispatcherInterface {
 		$fqnsc .= trim($route->getController(), "\\");
 
 		if(!class_exists($fqnsc)){
-			throw new \DomainException("Class not found: {$fqnsc}; via {$route}", 500);
+			throw new \DomainException("Class not found: {$fqnsc}; via {$route->getController()}", 500);
 		}
 
 		$instance = new \ReflectionClass($fqnsc);
 
 		if(!$instance->implementsInterface(DispatchableInterface::class)){
-			throw new \DomainException("Class missing interface: {$fqnsc}; via {$route}", 500);
+			throw new \DomainException("Class missing interface: {$fqnsc}; via {$route->getAction()}", 500);
 		}
 
 		$shouldInit = false;
@@ -78,7 +78,7 @@ class Dispatcher implements Interfaces\DispatcherInterface {
 
 			if($method){
 				if(!method_exists($obj, $method)){
-					throw new \InvalidArgumentException("Method '{$method}' not found on ".get_class($obj)."; via {$route}", 404);
+					throw new \InvalidArgumentException("Method '{$method}' not found on ".get_class($obj), 404);
 				}
 				$obj = [$obj, $method];
 			}

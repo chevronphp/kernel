@@ -11,13 +11,6 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 
 	}
 
-	function test___toString_1(){
-		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", "action", null, ["query" => "param"]);
-		$result = (string)$obj;
-		$expected = "namespace/controller/action?query=param";
-		$this->assertEquals($expected, $result);
-	}
-
 	function test_toArray(){
 		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", "action", null, ["query" => "param"]);
 		$result = $obj->toArray();
@@ -25,35 +18,15 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 			\Chevron\Kernel\Router\Route::CONTROLLER_KEY => "\\Namespace\\Controller",
 			\Chevron\Kernel\Router\Route::ACTION_KEY     => "action",
 			\Chevron\Kernel\Router\Route::FORMAT_KEY     => null,
+			\Chevron\Kernel\Router\Route::PARAMS_KEY     => ["query" => "param"],
 		];
-		$this->assertEquals($expected, $result);
-	}
-
-	function test___toString_2(){
-		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", null, "json", []);
-		$result = (string)$obj;
-		$expected = "namespace/controller/.json";
-		$this->assertEquals($expected, $result);
-	}
-
-	function test___toString_3(){
-		$obj = new \Chevron\Kernel\Router\Route("Namespace\\Controller", null, "json", []);
-		$result = (string)$obj;
-		$expected = "namespace/controller/.json";
-		$this->assertEquals($expected, $result);
-	}
-
-	function test_linkify(){
-		$obj = new \Chevron\Kernel\Router\Route("\\Controller", null, "json", []);
-		$result = $obj->link("\\Namespace\\");
-		$expected = "namespace/controller/.json";
 		$this->assertEquals($expected, $result);
 	}
 
 	function test_getHash(){
 		$obj = new \Chevron\Kernel\Router\Route("\\Namespace\\Controller", "action", null, ["query" => "param"]);
 		$result = $obj->getHash();
-		$expected = "namespace/controller/action?query=param";
+		$expected = json_encode($obj->toArray());
 		$expected = substr(sha1($expected), 0, 8);
 		$this->assertEquals($expected, $result);
 	}

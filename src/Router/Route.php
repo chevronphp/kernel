@@ -10,12 +10,10 @@ namespace Chevron\Kernel\Router;
 class Route implements Interfaces\RouteInterface{
 
 	const DEFAULT_CONTROLLER = "index";
-
 	const CONTROLLER_KEY     = "controller";
-
 	const ACTION_KEY         = "action";
-
 	const FORMAT_KEY         = "format";
+	const PARAMS_KEY         = "query";
 
 	/**
 	 * the value to return as the requested controller.
@@ -49,19 +47,9 @@ class Route implements Interfaces\RouteInterface{
 	 */
 	public function __construct($controller, $action = null, $format = null, array $params = []){
 		$this->controller = $controller ?: self::DEFAULT_CONTROLLER;
-
-		if($action){
-			$this->setAction($action);
-		}
-
-		if($format){
-			$this->setFormat($format);
-		}
-
-		if($params){
-			$this->setParams($params);
-		}
-
+		$this->setAction($action);
+		$this->setFormat($format);
+		$this->setParams($params);
 	}
 
 	/**
@@ -97,61 +85,6 @@ class Route implements Interfaces\RouteInterface{
 	}
 
 	/**
-	 * get a unique 8 char hash of the request
-	 */
-	public function getHash(){
-		return substr(sha1($this->__toString()), 0, 8);
-	}
-
-	/**
-	 * output the route as an array
-	 * @return array
-	 */
-	public function toArray(){
-		return [
-			static::CONTROLLER_KEY => $this->getController(),
-			static::ACTION_KEY     => $this->getAction(),
-			static::FORMAT_KEY     => $this->getFormat(),
-		];
-	}
-
-	/**
-	 * create a link looking string from the properties of the route
-	 */
-	public function __toString(){
-
-		$route = strtolower(strtr(trim($this->getController(), DIRECTORY_SEPARATOR), "\\", "/")) . "/";
-
-		if($this->action){
-			$route .= strtolower($this->getAction());
-		}
-
-		if($this->format){
-			$route .= "." . strtolower($this->getFormat());
-		}
-
-		if($this->params){
-			$route .= "?" . http_build_query($this->getParams());
-		}
-
-		return ltrim($route, "/");
-	}
-
-	/**
-	 * add a namespace prefix to the route's link looking string on the off
-	 * chance that you're dispatching from a specific namespace
-	 * @param string $namespace The prefix for the link
-	 */
-	public function link($namespace = ""){
-		$prefix = "";
-		if($namespace){
-			$prefix = strtolower(trim($namespace, "\\/"));
-		}
-		$link = ltrim($this->__toString(), "/");
-		return ltrim("{$prefix}/{$link}", "/");
-	}
-
-	/**
 	 * get the action
 	 * @param string $action
 	 * @return string
@@ -176,6 +109,26 @@ class Route implements Interfaces\RouteInterface{
 	 */
 	public function setParams(array $params){
 		$this->params = $params;
+	}
+
+	/**
+	 * get a unique 8 char hash of the request
+	 */
+	public function getHash(){
+		return substr(sha1(json_encode($this->toArray())), 0, 8);
+	}
+
+	/**
+	 * output the route as an array
+	 * @return array
+	 */
+	public function toArray(){
+		return [
+			static::CONTROLLER_KEY => $this->getController(),
+			static::ACTION_KEY     => $this->getAction(),
+			static::FORMAT_KEY     => $this->getFormat(),
+			static::PARAMS_KEY     => $this->getParams(),
+		];
 	}
 
 }

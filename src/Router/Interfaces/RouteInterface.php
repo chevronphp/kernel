@@ -33,10 +33,4 @@ interface RouteInterface {
 	 */
 	public function getParams();
 
-	/**
-	 * output the string version of the route
-	 * @return string
-	 */
-	public function __toString();
-
 }

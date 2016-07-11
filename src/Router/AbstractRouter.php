@@ -1,6 +1,7 @@
 <?php
 
 namespace Chevron\Kernel\Router;
+
 /**
  * A very simple and quite opinionated routing system, this is here ONLY to tweak
  * inheritence later on if I get the urge.
@@ -10,28 +11,34 @@ namespace Chevron\Kernel\Router;
  */
 abstract class AbstractRouter {
 
-	/**
-	 * the default action
-	 */
-	protected $default_action = "index";
+	const DEFAULT_ACTION = "index";
+	const DEFAULT_FORMAT = "html";
 
 	/**
-	 * set the default action
+	 * @var The root namespace to which requests are routed
 	 */
-	public function setDefaultAction($action){
-		$this->default_action = $action;
+	protected $rootNamespace;
+
+	public function __construct($ns = "\\"){
+		$this->rootNamespace = $this->trimSlashes($ns);
 	}
 
 	/**
-	 * the default format
+	 * trim the slashes from a string
+	 * @param string $name The string
+	 * @return string
 	 */
-	protected $default_format = "html";
+	protected function trimSlashes($name){
+		return trim($name, " /\\");
+	}
 
 	/**
-	 * set the default format
+	 * check if a class is in the root namespace
+	 * @param string $class The fully qualified class name
+	 * @return bool
 	 */
-	public function setDefaultFormat($format){
-		$this->default_format = $format;
+	protected function isOfNamespace($class){
+		return stripos($this->trimSlashes($class), $this->rootNamespace . "\\") === 0;
 	}
 
 	/**
@@ -63,8 +70,8 @@ abstract class AbstractRouter {
 			$controller = $class;
 		}
 
-		$method = $this->default_action;
-		$format = $this->default_format;
+		$method = self::DEFAULT_ACTION;
+		$format = self::DEFAULT_FORMAT;
 		if($action){
 			$method = $action;
 			if(($pos = strpos($action, ".")) !== false){
@@ -81,4 +88,47 @@ abstract class AbstractRouter {
 		return [$controller, $method, $format, $query];
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function generate($controller, $action = null, $format = null, array $options = []){
+		return $this->generateFromRoute(new Route($controller, $action, $format, $options));
+	}
+
+	/**
+	 * reverse a Route into it's url
+	 * @param Route $route
+	 * @return string
+	 */
+	protected function generateFromRoute(Interfaces\RouteInterface $route){
+
+		$controller = $route->getController();
+
+
+		if(is_object($controller)){
+			drop($route);
+		}
+
+		if($this->isOfNamespace($controller)){
+			$controller = substr($controller, strlen($this->rootNamespace));
+		}
+
+		$prefix = strtolower(strtr(trim($controller, DIRECTORY_SEPARATOR), "\\", "/"));
+
+		$action = strtolower($route->getAction() ?: self::DEFAULT_ACTION);
+
+		$format = strtolower($route->getFormat() ?: self::DEFAULT_FORMAT);
+
+		$query = "";
+		if($route->getParams()){
+			$query = http_build_query($route->getParams());
+		}
+
+		return rtrim(sprintf("%s/%s.%s?%s", $prefix, $action, $format, $query), " ?./");
+	}
+
 }
+
+
+
+
