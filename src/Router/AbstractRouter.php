@@ -92,6 +92,10 @@ abstract class AbstractRouter {
 	 * @inheritdoc
 	 */
 	public function generate($controller, $action = null, $format = null, array $options = []){
+		if(is_object($controller)){
+			$controller = get_class($controller);
+		}
+
 		return $this->generateFromRoute(new Route($controller, $action, $format, $options));
 	}
 
