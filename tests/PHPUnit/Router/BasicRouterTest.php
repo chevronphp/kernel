@@ -7,7 +7,7 @@ class BasicRouterTest extends PHPUnit_Framework_TestCase {
 	function test_parsePath_full(){
 		$path = "name/space/class/method.json?query=params";
 
-		$router = new Router\BasicRouter;
+		$router = new Router\BasicRouter(null, true);
 
 		$result = $router->match($path);
 
@@ -26,12 +26,12 @@ class BasicRouterTest extends PHPUnit_Framework_TestCase {
 	function test_parsePath_partial_1(){
 		$path = "name/space/class/method?query=params";
 
-		$router = new Router\BasicRouter;
+		$router = new Router\BasicRouter(null, false);
 
 		$result = $router->match($path);
 
 		$expected = new Router\Route(
-			"Name\\Space\\Class",
+			"name\\space\\class",
 			"method",
 			"html",
 			["query" => "params"]
@@ -50,7 +50,7 @@ class BasicRouterTest extends PHPUnit_Framework_TestCase {
 		$result = $router->match($path);
 
 		$expected = new Router\Route(
-			"Name\\Space\\Class",
+			"name\\space\\class",
 			"index",
 			"html",
 			["query" => "params"]
@@ -64,7 +64,7 @@ class BasicRouterTest extends PHPUnit_Framework_TestCase {
 	function test_parsePath_partial_3(){
 		$path = "name/space/class/";
 
-		$router = new Router\BasicRouter;
+		$router = new Router\BasicRouter(null, true);
 
 		$result = $router->match($path);
 
@@ -119,7 +119,7 @@ class BasicRouterTest extends PHPUnit_Framework_TestCase {
 		$result = $router->match($path, array_slice($_argv, 2));
 
 		$expected = new Router\Route(
-			"Name\\Space\\Class",
+			"name\\space\\class",
 			"method",
 			"html",
 			[]

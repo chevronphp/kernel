@@ -17,10 +17,16 @@ abstract class AbstractRouter {
 	/**
 	 * @var The root namespace to which requests are routed
 	 */
-	protected $rootNamespace;
+	protected $rootNamespace = "\\";
 
-	public function __construct($ns = "\\"){
-		$this->rootNamespace = $this->trimSlashes($ns);
+	protected $uCaseController;
+
+	public function __construct($ns = "\\", $uCaseController = false){
+		if(!empty($ns)){
+			$this->rootNamespace = $this->trimSlashes($ns);
+		}
+
+		$this->uCaseController = $uCaseController;
 	}
 
 	/**
@@ -60,9 +66,13 @@ abstract class AbstractRouter {
 
 		$parts = explode("/", $url["path"]);
 		$action = array_pop($parts); // methods are lowercase
-		array_walk($parts, function(&$v){ //, $k
-			$v = ucwords($v);
-		});
+
+		if($this->uCaseController){
+			array_walk($parts, function(&$v){ //, $k
+				$v = ucwords($v);
+			});
+		}
+
 		$class = implode("\\", $parts);
 
 		$controller = "";
